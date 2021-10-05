@@ -424,3 +424,6 @@ _[Ss]cripts
 *.nupkg
 *.ncrunchsolution
 *.dot[Cc]over
+*.cache
+*.editorconfig
+*.props
