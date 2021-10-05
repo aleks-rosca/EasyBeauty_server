@@ -28,6 +28,11 @@ namespace EasyBeauty_server.Repository
             {
                 DBConnection.DatabaseConnection.Execute(@"");
             }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+
+            }
         }
         public static void EditEmployee(Employee employee)
         {

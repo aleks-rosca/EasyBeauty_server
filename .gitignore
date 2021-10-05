@@ -428,3 +428,9 @@ _[Ss]cripts
 *.editorconfig
 *.props
 .vs/EasyBeauty_server/v16/.suo
+*.pdb
+*.cache
+*.cache
+*.dll
+*.txt
+*.exe
