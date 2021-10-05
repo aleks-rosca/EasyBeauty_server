@@ -1,8 +1,8 @@
-﻿using EasyBeauty_server.DataAccess;
-using EasyBeauty_server.Models;
-using EasyBeauty_server.Repository;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
+using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -10,20 +10,14 @@ namespace EasyBeauty_server.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class ManagerController : ControllerBase
+    public class MainController : ControllerBase
     {
         // GET: api/<MainController>
         [HttpGet]
-        public List<Employee> GetEmployees()
+        public IEnumerable<string> Get()
         {
-            using (DBConnection.GetConnection())
-            {
-                var result = EmployeeRepo.GetEmployees();
-                DBConnection.CloseConnection();
-                return result;
-            }
+            return new string[] { "value1", "value2" };
         }
-           
 
         // GET api/<MainController>/5
         [HttpGet("{id}")]
