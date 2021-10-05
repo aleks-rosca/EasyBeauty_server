@@ -14,27 +14,20 @@ namespace EasyBeauty_server.Repository
         {
             try
             {
-                DBConnection.DatabaseConnection.Execute("INSERT INTO Employee (fullName, phoneNr, email, password, role) Values (@fullName, @phoneNr, @email, @password, @role)",
+                DBConnection.DatabaseConnection.Execute(@"INSERT INTO Employee (fullName, phoneNr, email, password, role) Values (@fullName, @phoneNr, @email, @password, @role)",
                 new { fullName = employee.FullName, phoneNr = employee.PhoneNr, email = employee.Email, password = employee.Password, role = employee.Role });
             }
             catch (SqlException ex)
             {
-                string errorMessages = "";
-                for (int i = 0; i < ex.Errors.Count; i++)
-                {
-                    errorMessages =("Index #" + i + "\n" +
-                        "Message: " + ex.Errors[i].Message + "\n" +
-                        "LineNumber: " + ex.Errors[i].LineNumber + "\n" +
-                        "Source: " + ex.Errors[i].Source + "\n" +
-                        "Procedure: " + ex.Errors[i].Procedure + "\n"); 
-                }
-                Console.WriteLine(errorMessages.ToString());
-
+                Console.WriteLine(ex);
             }
         }
         public static void DeleteEmployee(Employee employee)
         {
-
+            try
+            {
+                DBConnection.DatabaseConnection.Execute(@"");
+            }
         }
         public static void EditEmployee(Employee employee)
         {
