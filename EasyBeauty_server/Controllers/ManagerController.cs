@@ -10,7 +10,7 @@ namespace EasyBeauty_server.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class MainController : ControllerBase
+    public class ManagerController : ControllerBase
     {
         // GET: api/<MainController>
         [HttpGet]
@@ -19,9 +19,12 @@ namespace EasyBeauty_server.Controllers
             using (DBConnection.GetConnection())
             {
                 var result = EmployeeRepo.GetEmployees();
+                DBConnection.CloseConnection();
                 return result;
+                
             }
             
+
         }
            
 

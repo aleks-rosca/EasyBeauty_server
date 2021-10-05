@@ -39,6 +39,10 @@ namespace EasyBeauty_server.DataAccess
             DatabaseConnection = connection;
             return connection;
         }
+        public static void CloseConnection()
+        {
+            databaseConnection.Close();
+        }
 
     }
 
