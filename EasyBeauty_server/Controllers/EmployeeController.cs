@@ -39,11 +39,11 @@ namespace EasyBeauty_server.Controllers
         public void CreateEmployee(Employee employee)
         {
             try { 
-            using (DBConnection.GetConnection())
-            {
+                using (DBConnection.GetConnection())
+                {
                 EmployeeRepo.CreateEmployee(employee);
                 DBConnection.CloseConnection();
-            }
+                }
           } catch(Exception e)
             {
                 Console.Write(e.Message);
@@ -58,8 +58,21 @@ namespace EasyBeauty_server.Controllers
 
         // DELETE api/<EmployeeController>/5
         [HttpDelete("{id}")]
-        public void Delete(int id)
+        public void DeleteEmployee(int id)
         {
+            try
+            {
+                using (DBConnection.GetConnection())
+                {
+                    EmployeeRepo.DeleteEmployee(id);
+                    DBConnection.CloseConnection();
+                }
+            }
+            catch(Exception e)
+            {
+                Console.Write(e);
+            }
+
         }
     }
 }

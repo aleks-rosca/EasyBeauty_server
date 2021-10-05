@@ -12,25 +12,16 @@ namespace EasyBeauty_server.Repository
     {
         public static void CreateEmployee(Employee employee)
         {
-            try
-            {
-                DBConnection.DatabaseConnection.Execute(@"INSERT INTO Employee (fullName, phoneNr, email, password, role) Values (@fullName, @phoneNr, @email, @password, @role)",
-                new { fullName = employee.FullName, phoneNr = employee.PhoneNr, email = employee.Email, password = employee.Password, role = employee.Role });
-            }
-            catch (SqlException ex)
-            {
-                Console.WriteLine(ex);
-            }
+            DBConnection.DatabaseConnection.Execute(@"INSERT INTO Employee (fullName, phoneNr, email, password, role) Values (@fullName, @phoneNr, @email, @password, @role)",
+            new { fullName = employee.FullName, phoneNr = employee.PhoneNr, email = employee.Email, password = employee.Password, role = employee.Role });
         }
-        public static void DeleteEmployee(Employee employee)
+        public static void DeleteEmployee(int id)
         {
-            try
-            {
-                DBConnection.DatabaseConnection.Execute(@"");
-            }
+            DBConnection.DatabaseConnection.Execute(@"DELETE FROM Employee WHERE ID =" + id + ";");
         }
-        public static void EditEmployee(Employee employee)
+        public static void EditEmployee(int id, Employee employee)
         {
+            DBConnection.DatabaseConnection.Execute(@"UPDATE TABLE Employee SET  ");
 
         }
         public static List<Employee> GetEmployees()
