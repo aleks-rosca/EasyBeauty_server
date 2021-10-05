@@ -10,35 +10,35 @@ namespace EasyBeauty_server.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class MainController : ControllerBase
+    public class AppointmentController : ControllerBase
     {
-        // GET: api/<MainController>
+        // GET: api/<AppointmentController>
         [HttpGet]
         public IEnumerable<string> Get()
         {
             return new string[] { "value1", "value2" };
         }
 
-        // GET api/<MainController>/5
+        // GET api/<AppointmentController>/5
         [HttpGet("{id}")]
         public string Get(int id)
         {
             return "value";
         }
 
-        // POST api/<MainController>
+        // POST api/<AppointmentController>
         [HttpPost]
         public void Post([FromBody] string value)
         {
         }
 
-        // PUT api/<MainController>/5
+        // PUT api/<AppointmentController>/5
         [HttpPut("{id}")]
         public void Put(int id, [FromBody] string value)
         {
         }
 
-        // DELETE api/<MainController>/5
+        // DELETE api/<AppointmentController>/5
         [HttpDelete("{id}")]
         public void Delete(int id)
         {
