@@ -27,13 +27,6 @@ namespace EasyBeauty_server.Controllers
             }
         }
 
-        // GET api/<EmployeeController>/5
-        [HttpGet("{id}")]
-        public string Get(int id)
-        {
-            return "value";
-        }
-
         // POST api/<EmployeeController>
         [HttpPost]
         public void CreateEmployee(Employee employee)
@@ -52,8 +45,19 @@ namespace EasyBeauty_server.Controllers
 
         // PUT api/<EmployeeController>/5
         [HttpPut("{id}")]
-        public void Put(int id, [FromBody] string value)
+        public void Put(int id, Employee employee)
         {
+            try
+            {
+                using (DBConnection.GetConnection())
+                {
+                    EmployeeRepo.EditEmployee(id, employee);
+                }
+            }
+            catch(Exception e)
+            {
+                Console.Write(e.Message);
+            }
         }
 
         // DELETE api/<EmployeeController>/5
