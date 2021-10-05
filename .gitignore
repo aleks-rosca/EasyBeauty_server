@@ -328,3 +328,21 @@ ASALocalRun/
 
 # MFractors (Xamarin productivity tool) working folder 
 .mfractor/
+.vs/EasyBeauty_server/v16/.suo
+EasyBeauty_server/bin/Debug/net5.0/EasyBeauty_server.dll
+EasyBeauty_server/bin/Debug/net5.0/EasyBeauty_server.exe
+EasyBeauty_server/bin/Debug/net5.0/EasyBeauty_server.pdb
+EasyBeauty_server/bin/Debug/net5.0/EasyBeauty_server.runtimeconfig.dev.json
+EasyBeauty_server/EasyBeauty_server.csproj.user
+EasyBeauty_server/obj/Debug/net5.0/apphost.exe
+EasyBeauty_server/obj/Debug/net5.0/EasyBeauty_server.assets.cache
+EasyBeauty_server/obj/Debug/net5.0/EasyBeauty_server.csproj.CoreCompileInputs.cache
+EasyBeauty_server/obj/Debug/net5.0/EasyBeauty_server.csproj.FileListAbsolute.txt
+EasyBeauty_server/obj/Debug/net5.0/EasyBeauty_server.dll
+EasyBeauty_server/obj/Debug/net5.0/EasyBeauty_server.GeneratedMSBuildEditorConfig.editorconfig
+EasyBeauty_server/obj/Debug/net5.0/EasyBeauty_server.genruntimeconfig.cache
+EasyBeauty_server/obj/Debug/net5.0/EasyBeauty_server.pdb
+EasyBeauty_server/obj/EasyBeauty_server.csproj.nuget.dgspec.json
+EasyBeauty_server/obj/EasyBeauty_server.csproj.nuget.g.props
+EasyBeauty_server/obj/project.assets.json
+EasyBeauty_server/obj/project.nuget.cache
