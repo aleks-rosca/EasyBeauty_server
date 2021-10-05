@@ -7,7 +7,7 @@ namespace EasyBeauty_server.Models
 {
     public class Service
     {
-        public int ServiceID { set; get }
+        public int ServiceID { set; get; }
         public string ServiceName { set; get; }
         public string ServiceDescription { set; get; }
         public double ServicePrice { set; get; }

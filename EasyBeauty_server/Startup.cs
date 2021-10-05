@@ -1,3 +1,5 @@
+using EasyBeauty_server.DataAccess;
+using EasyBeauty_server.Models;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -19,6 +21,7 @@ namespace EasyBeauty_server
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
+            
         }
 
         public IConfiguration Configuration { get; }
