@@ -22,10 +22,18 @@ namespace EasyBeauty_server.Controllers
         [HttpGet]
         public List<Employee> Get()
         {
-            using (DBConnection.GetConnection())
+            try
             {
-                var result = EmployeeRepo.GetEmployees();
-                return result;
+                using (DBConnection.GetConnection())
+                {
+                    var result = EmployeeRepo.GetEmployees();
+                    return result;
+                }
+            }
+            catch(Exception e)
+            {
+                Console.Write(e.Message);
+                return new List<Employee>();
             }
         }
 
