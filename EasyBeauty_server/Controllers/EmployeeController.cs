@@ -22,7 +22,6 @@ namespace EasyBeauty_server.Controllers
             using (DBConnection.GetConnection())
             {
                 var result = EmployeeRepo.GetEmployees();
-                DBConnection.CloseConnection();
                 return result;
             }
         }
@@ -35,7 +34,6 @@ namespace EasyBeauty_server.Controllers
                 using (DBConnection.GetConnection())
                 {
                 EmployeeRepo.CreateEmployee(employee);
-                DBConnection.CloseConnection();
                 }
           } catch(Exception e)
             {
@@ -69,7 +67,6 @@ namespace EasyBeauty_server.Controllers
                 using (DBConnection.GetConnection())
                 {
                     EmployeeRepo.DeleteEmployee(id);
-                    DBConnection.CloseConnection();
                 }
             }
             catch(Exception e)
