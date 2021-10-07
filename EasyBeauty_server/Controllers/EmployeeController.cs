@@ -46,9 +46,9 @@ namespace EasyBeauty_server.Controllers
 
         // PUT api/<EmployeeController>/5
         [HttpPut("{id}")]
-        public string Put(int id, Employee employee)
+        public void Put(int id, Employee employee)
         {
-            var hashedPassword = Hashing.HashString(employee.Password);
+            employee.Password = Hashing.HashString(employee.Password);
             try
             {
                 using (DBConnection.GetConnection())
@@ -62,9 +62,6 @@ namespace EasyBeauty_server.Controllers
             {
                 Console.Write(e.Message);
             }
-            
-            Console.Write(hashedPassword);
-            return "password: " + hashedPassword;
            
         }
 
