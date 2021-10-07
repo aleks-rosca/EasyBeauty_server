@@ -36,12 +36,12 @@
             {
                 using (DBConnection.GetConnection())
                 {
-                    if (EmployeeRepo.CheckEmployeeEmail(employee.Email)) 
+                    if (EmployeeRepo.CheckEmployeeEmail(employee.Email))
                     {
                         return "Email already Exists!";
                     }
                     EmployeeRepo.CreateEmployee(employee);
-                    
+
                 }
             }
             catch (Exception e)

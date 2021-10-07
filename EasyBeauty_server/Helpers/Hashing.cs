@@ -1,12 +1,9 @@
-﻿using System;
-using System.Security.Cryptography;
-using System.Text;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-
-namespace EasyBeauty_server.Helpers
+﻿namespace EasyBeauty_server.Helpers
 {
+    using System;
+    using System.Security.Cryptography;
+    using System.Text;
+
     public class Hashing
     {
         public static string HashString(string text, string salt = "")

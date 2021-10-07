@@ -1,25 +1,23 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using System.Data.SqlClient;
-using Dapper;
-namespace EasyBeauty_server.DataAccess
-    
+﻿namespace EasyBeauty_server.DataAccess
 {
+    using Dapper;
+    using System;
+    using System.Data.SqlClient;
+
     public static class DBConnection
     {
         private static SqlConnection databaseConnection;
+
         public static SqlConnection DatabaseConnection
         {
             get
             {
                 DefaultTypeMap.MatchNamesWithUnderscores = true;
-                if(databaseConnection ==null)
+                if (databaseConnection == null)
                 {
                     throw new Exception($"Database Connection error");
                 }
-                if(databaseConnection.State != System.Data.ConnectionState.Open)
+                if (databaseConnection.State != System.Data.ConnectionState.Open)
                 {
                     throw new Exception($"Connection state: { databaseConnection.State}");
                 }
@@ -39,7 +37,5 @@ namespace EasyBeauty_server.DataAccess
             DatabaseConnection = connection;
             return connection;
         }
-
     }
-
 }
