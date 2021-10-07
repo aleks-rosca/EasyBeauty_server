@@ -1,24 +1,16 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using EasyBeauty_server.Models;
-using EasyBeauty_server.DataAccess;
-using EasyBeauty_server.Repository;
-using System;
-using System.Collections.Generic;
-using EasyBeauty_server.Helpers;
-using System.Security.Cryptography;
-using System.Linq;
-using System.Threading.Tasks;
-using System.Text;
-
-// For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-
-namespace EasyBeauty_server.Controllers
+﻿namespace EasyBeauty_server.Controllers
 {
+    using EasyBeauty_server.DataAccess;
+    using EasyBeauty_server.Models;
+    using EasyBeauty_server.Repository;
+    using Microsoft.AspNetCore.Mvc;
+    using System;
+    using System.Collections.Generic;
+
     [Route("api/[controller]")]
     [ApiController]
     public class EmployeeController : ControllerBase
     {
-        // GET: api/<EmployeeController>
         [HttpGet]
         public List<Employee> Get()
         {
@@ -30,52 +22,53 @@ namespace EasyBeauty_server.Controllers
                     return result;
                 }
             }
-            catch(Exception e)
+            catch (Exception e)
             {
                 Console.Write(e.Message);
                 return new List<Employee>();
             }
         }
 
-        // POST api/<EmployeeController>
         [HttpPost]
-        public void CreateEmployee(Employee employee)
+        public string CreateEmployee(Employee employee)
         {
-            try { 
+            try
+            {
                 using (DBConnection.GetConnection())
                 {
-                EmployeeRepo.CreateEmployee(employee);
+                    if (EmployeeRepo.CheckEmployeeEmail(employee.Email)) 
+                    {
+                        return "Email already Exists!";
+                    }
+                    EmployeeRepo.CreateEmployee(employee);
+                    
                 }
-          } catch(Exception e)
+            }
+            catch (Exception e)
             {
                 Console.Write(e.Message);
             }
+            return "";
         }
 
-        // PUT api/<EmployeeController>/5
         [HttpPut("{id}")]
         public void Put(int id, Employee employee)
         {
-            employee.Password = Hashing.HashString(employee.Password);
             try
             {
                 using (DBConnection.GetConnection())
                 {
                     EmployeeRepo.EditEmployee(id, employee);
-                    
+
                 }
-                
+
             }
-            catch(Exception e)
+            catch (Exception e)
             {
                 Console.Write(e.Message);
             }
-           
         }
 
-
-
-        // DELETE api/<EmployeeController>/5
         [HttpDelete("{id}")]
         public void DeleteEmployee(int id)
         {
@@ -86,11 +79,10 @@ namespace EasyBeauty_server.Controllers
                     EmployeeRepo.DeleteEmployee(id);
                 }
             }
-            catch(Exception e)
+            catch (Exception e)
             {
                 Console.Write(e);
             }
-
         }
     }
 }
