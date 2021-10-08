@@ -46,7 +46,7 @@
         }
 
         [HttpGet("{id},{email},{password}")]
-        public string CheckPassword(int id, string email, string password)
+        public string Login(int id, string email, string password)
         {
             try
             {

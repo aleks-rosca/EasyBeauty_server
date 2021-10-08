@@ -12,7 +12,7 @@
     public class EmployeeController : ControllerBase
     {
         [HttpGet]
-        public List<Employee> Get()
+        public List<Employee> GetEmployees()
         {
             try
             {
@@ -52,7 +52,7 @@
         }
 
         [HttpPut("{id}")]
-        public void Put(int id, Employee employee)
+        public void EditEmployee(int id, [FromBody] Employee employee)
         {
             try
             {

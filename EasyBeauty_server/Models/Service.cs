@@ -2,15 +2,15 @@
 {
     public class Service
     {
-        public int ServiceID { set; get; }
+        public int ID { set; get; }
 
-        public string ServiceName { set; get; }
+        public string Name { set; get; }
 
-        public string ServiceDescription { set; get; }
+        public string Description { set; get; }
 
-        public double ServicePrice { set; get; }
+        public double Price { set; get; }
 
-        public byte[] ServiceImage { set; get; }
+        public string Image { set; get; }
 
         public int Duration { set; get; }
     }

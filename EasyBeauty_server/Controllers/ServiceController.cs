@@ -1,16 +1,33 @@
 ﻿namespace EasyBeauty_server.Controllers
 {
+    using EasyBeauty_server.DataAccess;
+    using EasyBeauty_server.Models;
+    using EasyBeauty_server.Repository;
     using Microsoft.AspNetCore.Mvc;
+    using System;
     using System.Collections.Generic;
+    using System.Text;
 
     [Route("api/[controller]")]
     [ApiController]
     public class ServiceController : ControllerBase
     {
         [HttpGet]
-        public IEnumerable<string> Get()
+        public List<Service> GetServices()
         {
-            return new string[] { "value1", "value2" };
+            try
+            {
+                using (DBConnection.GetConnection())
+                {
+                    var result = ServiceRepo.GetServices();
+                    return result;
+                }
+            }
+            catch (Exception e)
+            {
+                Console.Write(e.Message);
+                return new List<Service>();
+            }
         }
 
         [HttpGet("{id}")]
@@ -20,18 +37,60 @@
         }
 
         [HttpPost]
-        public void Post([FromBody] string value)
+        public string CreateService([FromBody] Service service)
         {
+            Console.WriteLine(service);
+            try
+            {
+                using (DBConnection.GetConnection())
+                {
+                    if (ServiceRepo.CheckServiceName(service.Name))
+                    {
+                        return "Service name already exists!";
+                    }
+                    ServiceRepo.CreateService(service);
+
+                }
+            }
+            catch (Exception e)
+            {
+                Console.Write(e.Message);
+            }
+            return "";
         }
 
         [HttpPut("{id}")]
-        public void Put(int id, [FromBody] string value)
+        public void EditService(int id, [FromBody] Service service)
         {
+            try
+            {
+                using (DBConnection.GetConnection())
+                {
+                    ServiceRepo.EditService(id, service);
+
+                }
+
+            }
+            catch (Exception e)
+            {
+                Console.Write(e.Message);
+            }
         }
 
         [HttpDelete("{id}")]
-        public void Delete(int id)
+        public void DeleteService(int id)
         {
+            try
+            {
+                using (DBConnection.GetConnection())
+                {
+                    ServiceRepo.DeleteService(id);
+                }
+            }
+            catch (Exception e)
+            {
+                Console.Write(e);
+            }
         }
     }
 }

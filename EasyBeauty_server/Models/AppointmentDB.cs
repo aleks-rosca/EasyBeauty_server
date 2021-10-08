@@ -2,7 +2,7 @@
 {
     using System;
 
-    public class Appointment
+    public class AppointmentDB
     {
         public int ID { set; get; }
 
@@ -16,6 +16,8 @@
 
         public int ServiceID { set; get; }
 
-        public Customer Customer { set; get; }
+        public int PhoneNr { set; get; }
+
+        public bool IsAccepted { set; get; }
     }
 }

@@ -21,7 +21,7 @@
 
         public static void DeleteEmployee(int id)
         {
-            DBConnection.DatabaseConnection.Execute(@"DELETE FROM Employee WHERE ID =" + id + ";");
+            DBConnection.DatabaseConnection.Execute(@"DELETE FROM Employee WHERE ID = @id;", new { id });
         }
 
         public static void EditEmployee(int id, Employee employee)
