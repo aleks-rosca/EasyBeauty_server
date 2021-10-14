@@ -6,13 +6,14 @@
     using EasyBeauty_server.Repository;
     using Microsoft.AspNetCore.Mvc;
     using System;
+    using System.Text.Json;
 
     [Route("api/[controller]")]
     [ApiController]
     public class LoginController : ControllerBase
     {
-        [HttpGet("{email}")]
-        public EmailResponse CheckEmail(string email)
+        [HttpGet("check-email")]
+        public EmailResponse CheckEmail([FromQuery]string email)
         {
             try
             {
@@ -29,13 +30,14 @@
             }
         }
 
-        [HttpPut("{id}, {password}")]
-        public void CreatePassword(int id, string password)
+        [HttpPut("create-password")]
+        public void CreatePassword([FromQuery]int id, string password)
         {
             try
             {
                 using (DBConnection.GetConnection())
                 {
+
                     LoginRepo.CreatePassword(id, Hashing.HashString(password));
                 }
             }
@@ -45,8 +47,8 @@
             }
         }
 
-        [HttpGet("{id},{email},{password}")]
-        public string Login(int id, string email, string password)
+        [HttpGet("login")]
+        public string Login([FromQuery]int id, string email, string password)
         {
             try
             {
@@ -70,8 +72,8 @@
             }
         }
 
-        [HttpDelete("{id}, {token}")]
-        public void Logout(int id, string token)
+        [HttpDelete("logout")]
+        public void Logout([FromBody]int id, string token)
         {
             try
             {
