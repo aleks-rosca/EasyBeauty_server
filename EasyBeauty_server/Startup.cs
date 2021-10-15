@@ -21,6 +21,13 @@ namespace EasyBeauty_server
 
             services.AddControllers();
             services.AddControllers().AddNewtonsoftJson();
+            services.AddCors(options =>
+            {
+                options.AddPolicy(
+                     "AllowOrigin",
+                     builder =>
+                builder.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod());
+            });
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "EasyBeauty_server", Version = "v1" });
@@ -35,6 +42,13 @@ namespace EasyBeauty_server
                 app.UseSwagger();
                 app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "EasyBeauty_server v1"));
             }
+
+            app.UseCors(x =>
+            {
+                x.AllowAnyOrigin()
+                    .AllowAnyMethod()
+                    .AllowAnyHeader();
+            });
 
             app.UseHttpsRedirection();
 
