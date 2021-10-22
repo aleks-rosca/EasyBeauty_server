@@ -31,7 +31,7 @@ public class ProductRepo
     public static void EditProduct(int id, Product Product)
     {
         DBConnection.DatabaseConnection.Execute(@"UPDATE Product SET name = @name, description = @description, price = @price, image = @image WHERE ID = @id",
-            new { id = id, name = Product.Name, description = Product.Description, price = Product.Price, image = Product.Image});
+            new { id, name = Product.Name, description = Product.Description, price = Product.Price, image = Product.Image});
     }
 
     public static List<Product> GetProducts()

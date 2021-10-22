@@ -16,7 +16,7 @@
 
         public static bool CheckEmployeeEmail(string email)
         {
-            return DBConnection.DatabaseConnection.ExecuteScalar<bool>(@"SELECT 1 FROM Employee Where email = @email", new { email = email });
+            return DBConnection.DatabaseConnection.ExecuteScalar<bool>(@"SELECT 1 FROM Employee Where email = @email", new { email });
         }
 
         public static void DeleteEmployee(int id)
@@ -27,7 +27,7 @@
         public static void EditEmployee(int id, Employee employee)
         {
             DBConnection.DatabaseConnection.Execute(@"UPDATE Employee SET fullName = @fullName, phoneNr = @phoneNr, email = @email, role = @role WHERE ID = @id",
-                new { id = id, fullName = employee.FullName, phoneNr = employee.PhoneNr, email = employee.Email, role = employee.Role });
+                new { id, fullName = employee.FullName, phoneNr = employee.PhoneNr, email = employee.Email, role = employee.Role });
         }
 
         public static List<Employee> GetEmployees()

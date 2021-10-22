@@ -6,39 +6,44 @@
 
     public class LoginRepo
     {
-        public static EmailResponse CheckEmail(string email)
+        public static bool CheckEmail(string email)
         {
-            return DBConnection.DatabaseConnection.QuerySingle<EmailResponse>(@"SELECT id , (SELECT 1 FROM Employee Where email = @email AND password != '')AS hasPassword FROM Employee WHERE email = @email", new { email = email });
+            return DBConnection.DatabaseConnection.QuerySingle<bool>(@"SELECT 1 FROM Employee Where email = @email AND password != ''", new { email  });
         }
 
-        public static void CreatePassword(int id, string password)
+        public static void CreatePassword(string email, string password)
         {
-            DBConnection.DatabaseConnection.Execute(@"UPDATE Employee SET password=@password WHERE id=@id", new { id = id, password = password });
+            DBConnection.DatabaseConnection.Execute(@"UPDATE Employee SET password=@password WHERE email=@email", new { email,  password });
         }
 
-        public static bool CheckPassword(int id, string password)
+        public static bool CheckPassword(string email, string password)
         {
-            return DBConnection.DatabaseConnection.ExecuteScalar<bool>(@"SELECT 1 FROM Employee Where id = @id AND password = @password", new { id = id, password = password });
+            return DBConnection.DatabaseConnection.ExecuteScalar<bool>(@"SELECT 1 FROM Employee WHERE email = @email AND password = @password", new { email, password });
         }
 
+        public static UserInfo GetUserInfo(string email)
+        {
+            return DBConnection.DatabaseConnection.QuerySingle<UserInfo>(@"SELECT fullName, id, role FROM Employee WHERE email = @email", new { email });
+        }
+        
         public static void SetToken(int id, string token)
         {
-            DBConnection.DatabaseConnection.Execute(@"INSERT INTO Token(token, employeeid) VALUES (@token, @id)", new { token = token, id = id });
+            DBConnection.DatabaseConnection.Execute(@"INSERT INTO Token(token, employeeid) VALUES (@token, @id)", new { token,  id });
         }
 
         public static void RemoveToken(string token)
         {
-            DBConnection.DatabaseConnection.Execute(@"DELETE FROM Token where token = @token", new { token = token });
+            DBConnection.DatabaseConnection.Execute(@"DELETE FROM Token WHERE token = @token", new { token });
         }
 
         public static bool CheckToken(int id, string token)
         {
-            return DBConnection.DatabaseConnection.ExecuteScalar<bool>(@"SELECT 1 FROM Token Where employeeid = @id AND token = @token", new { id = id, token = token });
+            return DBConnection.DatabaseConnection.ExecuteScalar<bool>(@"SELECT 1 FROM Token WHERE employeeid = @id AND token = @token", new { id, token });
         }
 
         public static bool CheckLogin(int id)
         {
-            return DBConnection.DatabaseConnection.ExecuteScalar<bool>(@"SELECT 1 FROM Token Where employeeid = @id", new { id = id });
+            return DBConnection.DatabaseConnection.ExecuteScalar<bool>(@"SELECT 1 FROM Token WHERE employeeid = @id", new { id });
         }
     }
 }

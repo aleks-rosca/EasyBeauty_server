@@ -4,42 +4,40 @@
     using EasyBeauty_server.Helpers;
     using EasyBeauty_server.Models;
     using EasyBeauty_server.Repository;
-    using Microsoft.AspNetCore.Mvc;
-    using Microsoft.AspNetCore.Mvc.Filters;
-    using System;
     using System.Text.Json;
+    using Microsoft.AspNetCore.Mvc;
+    using System;
 
     [Route("api/[controller]")]
     [ApiController]
     public class LoginController : ControllerBase
     {
         [HttpGet("check-email")]
-        public EmailResponse CheckEmail([FromQuery]string email)
+        public object CheckEmail([FromQuery]string email)
         {
             try
             {
                 using (DBConnection.GetConnection())
                 {
-                    var result = LoginRepo.CheckEmail(email);
-                    return result;
+                   var result = LoginRepo.CheckEmail(email);
+                    return new { hasLogin = result };
                 }
             }
             catch (Exception e)
             {
                 Console.Write(e.Message);
-                return null;
+                return new { error = "This email doesn't have an account" };
             }
         }
 
         [HttpPut("create-password")]
-        public void CreatePassword([FromQuery]int id, string password)
+        public void CreatePassword([FromQuery]string email, string password)
         {
             try
             {
                 using (DBConnection.GetConnection())
                 {
-
-                    LoginRepo.CreatePassword(id, Hashing.HashString(password));
+                    LoginRepo.CreatePassword(email, Hashing.HashString(password));
                 }
             }
             catch (Exception e)
@@ -49,20 +47,25 @@
         }
 
         [HttpGet("login")]
-        public string Login([FromQuery]int id, string email, string password)
+        public object Login([FromQuery] string email, string password)
         {
             try
             {
                 using (DBConnection.GetConnection())
                 {
-                    var validateLogin = LoginRepo.CheckPassword(id, Hashing.HashString(password));
-                    if (LoginRepo.CheckLogin(id)) { throw new ArgumentException("Already Loggen In"); }
+                    var validateLogin = LoginRepo.CheckPassword(email, Hashing.HashString(password));
 
-                    if (!validateLogin) { throw new ArgumentException("Not Autenticated"); }
-
+                    if (!validateLogin) { return new { error = "Password incorrect" }; }
+                    
+                    var userInfo = LoginRepo.GetUserInfo(email);
+             
                     var token = Hashing.HashString(email, DateTime.Now.ToString());
-                    LoginRepo.SetToken(id, token);
-                    return token;
+                    userInfo.Token = token;
+
+                    LoginRepo.SetToken(userInfo.Id, token);
+                    var plainTextBytes = System.Text.Encoding.UTF8.GetBytes(JsonSerializer.Serialize(userInfo));
+                    var encryptCookie = Convert.ToBase64String(plainTextBytes);
+                    return new { cookie = encryptCookie };
 
                 }
             }
@@ -74,7 +77,7 @@
         }
 
         [HttpDelete("logout")]
-        public void Logout([FromBody]int id, string token)
+        public void Logout([FromQuery]int id, string token)
         {
             try
             {

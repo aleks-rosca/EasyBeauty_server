@@ -40,7 +40,7 @@ namespace EasyBeauty_server.Repository
         public static void EditAppointment(int id, AppointmentDB appointmentDB)
         {
             DBConnection.DatabaseConnection.Execute(@"UPDATE Appointment SET employeeid = @employeeid, serviceid= @serviceid, starttime= @starttime, endtime= @endtime, isAccepted= @isAccepted WHERE ID = @id",
-                new { id = id, employeeid = appointmentDB.EmployeeID, serviceid = appointmentDB.ServiceID, starttime = appointmentDB.StartTime, endtime = appointmentDB.EndTime, isAccepted= appointmentDB.IsAccepted });
+                new { id, employeeid = appointmentDB.EmployeeID, serviceid = appointmentDB.ServiceID, starttime = appointmentDB.StartTime, endtime = appointmentDB.EndTime, isAccepted= appointmentDB.IsAccepted });
         }
         public static List<AppointmentDB> GetAppointmentsByEmployee(int employeeId)
         {

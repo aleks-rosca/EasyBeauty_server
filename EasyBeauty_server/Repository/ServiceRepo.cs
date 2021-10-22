@@ -27,7 +27,7 @@
         public static void EditService(int id, Service service)
         {
             DBConnection.DatabaseConnection.Execute(@"UPDATE Service SET name = @name, description = @description, price = @price, image = @image, duration = @duration WHERE ID = @id",
-                new { id = id, name = service.Name, description = service.Description, price = service.Price, image = service.Image, duration = service.Duration });
+                new { id, name = service.Name, description = service.Description, price = service.Price, image = service.Image, duration = service.Duration });
         }
 
         public static List<Service> GetServices()
