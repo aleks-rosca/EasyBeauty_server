@@ -20,7 +20,12 @@
                 using (DBConnection.GetConnection())
                 {
                    var result = LoginRepo.CheckEmail(email);
-                    return new { hasLogin = result };
+                    Console.WriteLine(result.Password);
+                    if (result.Password == "" || result.Password == null)
+                    {
+                        return new { hasLogin = false };
+                    }
+                    else return new { hasLogin = true };
                 }
             }
             catch (Exception e)
@@ -31,18 +36,27 @@
         }
 
         [HttpPut("create-password")]
-        public void CreatePassword([FromQuery]string email, string password)
+        public object CreatePassword([FromQuery]string email, string password, string repeatedPassword)
         {
             try
             {
                 using (DBConnection.GetConnection())
                 {
+                    if (password == repeatedPassword || password.Length > 6 || repeatedPassword.Length > 6)
+                    {
                     LoginRepo.CreatePassword(email, Hashing.HashString(password));
+                        return new { success = "password created" };
+                    }
+                    else
+                    {
+                        return new { error = "password invalid" };
+                    }
                 }
             }
             catch (Exception e)
             {
                 Console.Write(e.Message);
+                return new { error = e.Message };
             }
         }
 
@@ -77,19 +91,21 @@
         }
 
         [HttpDelete("logout")]
-        public void Logout([FromQuery]int id, string token)
+        public object Logout([FromQuery]int id, string token)
         {
             try
             {
                 using (DBConnection.GetConnection())
                 {
-                    if (!LoginRepo.CheckToken(id, token)) { throw new ArgumentException("Not Logged In"); }
+                    if (!LoginRepo.CheckToken(id, token)) { return new { error = "Not logged in" }; };
                     LoginRepo.RemoveToken(token);
+                    return new { success = "Logged out" };
                 }
             }
             catch (Exception e)
             {
                 Console.Write(e.Message);
+                return new { error = "Something interrupted" };
             }
         }
     }

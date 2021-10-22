@@ -6,9 +6,9 @@
 
     public class LoginRepo
     {
-        public static bool CheckEmail(string email)
+        public static EmailDatabase CheckEmail(string email)
         {
-            return DBConnection.DatabaseConnection.QuerySingle<bool>(@"SELECT 1 FROM Employee Where email = @email AND password != ''", new { email  });
+            return DBConnection.DatabaseConnection.QuerySingle<EmailDatabase>(@"SELECT email, password FROM Employee Where email = @email", new { email });
         }
 
         public static void CreatePassword(string email, string password)
