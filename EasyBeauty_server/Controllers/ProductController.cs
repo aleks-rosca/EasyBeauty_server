@@ -6,6 +6,7 @@
     using Microsoft.AspNetCore.Mvc;
     using System;
     using System.Collections.Generic;
+    using System.IO;
     using System.Net.Http.Headers;
 
     [Route("api/[controller]")]
@@ -38,8 +39,8 @@
             return "value";
         }
 
-        [HttpPost]
-        public string CreateProduct([FromBody] Product product)
+        [HttpPost, DisableRequestSizeLimit]
+        public IActionResult CreateProduct([FromBody] Product product)
         {
             try
             {
@@ -47,17 +48,16 @@
                 {
                     if (ProductRepo.CheckProductName(product.Name))
                     {
-                        return "Product name already exists!";
+                        return BadRequest("Product name already exists!");
                     }
                     ProductRepo.CreateProduct(product);
-
+                    return Ok();
                 }
             }
             catch (Exception e)
             {
-                Console.Write(e.Message);
+                return StatusCode(500, "Error: " + e);
             }
-            return "";
         }
 
         [HttpPut("{id}")]

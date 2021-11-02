@@ -1,4 +1,6 @@
-﻿namespace EasyBeauty_server.Models
+﻿using Microsoft.AspNetCore.Http;
+
+namespace EasyBeauty_server.Models
 {
     public class Product
     {

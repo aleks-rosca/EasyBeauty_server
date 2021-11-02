@@ -6,7 +6,9 @@
     using Microsoft.AspNetCore.Mvc;
     using System;
     using System.Collections.Generic;
+    using System.IO;
     using System.Text;
+    using static System.Net.Mime.MediaTypeNames;
 
     [Route("api/[controller]")]
     [ApiController]
@@ -37,7 +39,7 @@
         }
 
         [HttpPost]
-        public string CreateService([FromBody] Service service)
+        public IActionResult CreateService([FromBody] Service service)
         {
             Console.WriteLine(service);
             try
@@ -46,17 +48,18 @@
                 {
                     if (ServiceRepo.CheckServiceName(service.Name))
                     {
-                        return "Service name already exists!";
+                        return BadRequest("Service name already exists!");
                     }
                     ServiceRepo.CreateService(service);
+                    return Ok();
 
                 }
             }
             catch (Exception e)
             {
-                Console.Write(e.Message);
+                return StatusCode(500, e);
             }
-            return "";
+            
         }
 
         [HttpPut("{id}")]
