@@ -24,7 +24,6 @@
 
                     foreach (var a in result)
                     {
-
                         var employee = new Employee
                         {
                             ID = a.EmployeeID,
@@ -42,7 +41,6 @@
                             FullName = a.CustomerName,
                             PhoneNumber = a.PhoneNr
                         };
-
                         var appointment = new Appointment
                         {
                             ID = a.ID,
