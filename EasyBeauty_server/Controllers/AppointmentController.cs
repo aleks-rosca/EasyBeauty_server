@@ -12,25 +12,60 @@
     public class AppointmentController : ControllerBase
     {
         [HttpGet]
-        public List<AppointmentDB> GetAppointments()
+        public List<Appointment> GetAppointments()
         {
             try
             {
                 using (DBConnection.GetConnection())
                 {
-                    var result = AppointmentRepo.GetAppointments();
                     
-                    return result;
+                    var list = new List<Appointment>();
+                    var result = AppointmentRepo.GetAppointments();
+
+                    foreach (var a in result)
+                    {
+
+                        var employee = new Employee
+                        {
+                            ID = a.EmployeeID,
+                            FullName = a.EmployeeName
+                        };
+                        var service = new Service
+                        {
+                            ID = a.ServiceID,
+                            Name = a.ServiceName
+                        };
+                        var customer = new Customer
+                        {
+                            FullName = a.CustomerName,
+                            PhoneNumber = a.PhoneNr
+                        };
+
+                        var appointment = new Appointment
+                        {
+                            ID = a.ID,
+                            StartTime = a.StartTime,
+                            EndTime = a.EndTime,
+                            Notes = a.Notes,
+                            Employee = employee,
+                            Service = service,
+                            Customer = customer,
+                            IsAccepted = a.IsAccepted
+                        };
+                        list.Add(appointment);
+                    }
+
+                    return list;
                 }
             }
             catch (Exception e)
             {
                 Console.Write(e.Message);
-                return new List<AppointmentDB>();
+                return new List<Appointment>();
             }
         }
 
-        [HttpGet("/pizdira/{employeeId}")]
+        [HttpGet("/appointment/{employeeId}")]
         public List<AppointmentDB> GetAppointmentsByEmployee(int employeeId)
         {
             try

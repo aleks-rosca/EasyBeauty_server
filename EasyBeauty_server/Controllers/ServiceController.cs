@@ -51,7 +51,7 @@
                         return BadRequest("Service name already exists!");
                     }
                     ServiceRepo.CreateService(service);
-                    return Ok();
+                    return Ok("Service Created");
 
                 }
             }

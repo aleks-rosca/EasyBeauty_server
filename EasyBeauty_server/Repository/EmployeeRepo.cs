@@ -34,5 +34,9 @@
         {
             return DBConnection.DatabaseConnection.Query<Employee>("Select id, fullName, phoneNr, email, role from Employee").ToList();
         }
+        public static Employee getEmployeeById(int id)
+        {
+            return DBConnection.DatabaseConnection.QuerySingle(@"Select id, fullName from Employee WHERE ID = @id", id);
+        }
     }
 }

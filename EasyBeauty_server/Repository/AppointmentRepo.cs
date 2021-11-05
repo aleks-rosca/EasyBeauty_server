@@ -12,17 +12,25 @@ namespace EasyBeauty_server.Repository
     {
         public static List<AppointmentDB> GetAppointments()
         {
-            return DBConnection.DatabaseConnection.Query<AppointmentDB>("Select * from Appointment").ToList();
+            return DBConnection.DatabaseConnection.Query<AppointmentDB>(@"
+            SELECT id, startTime, endTime, notes, employeeID,
+            (SELECT fullName FROM Employee WHERE ID = A.employeeId) AS EmployeeName, serviceID,
+            (SELECT name FROM Service WHERE ID = A.serviceId) AS ServiceName,
+            (SELECT name FROM Customer WHERE phoneNr = A.phoneNr) AS CustomerName, phoneNr, isAccepted FROM Appointment AS A").ToList();
            
         }
         public static void CreateAppointment(Appointment appointment)
         {
             DBConnection.DatabaseConnection.Execute(@"INSERT INTO Appointment (employeeid, phonenr, serviceid, starttime, endtime, notes, isAccepted) VALUES (@employeeID, @phonenr, @serviceid, @starttime, @endtime, @notes, 0)",
-            new { employeeid = appointment.EmployeeID, phonenr = appointment.Customer.PhoneNumber, serviceid = appointment.ServiceID, starttime = appointment.StartTime, endtime = appointment.EndTime, notes = appointment.Notes });
+            new { employeeid = appointment.Employee.ID, phonenr = appointment.Customer.PhoneNumber, serviceid = appointment.Service.ID, starttime = appointment.StartTime, endtime = appointment.EndTime, notes = appointment.Notes });
         }
         public static void CreateCustomer(Customer customer)
         {
             DBConnection.DatabaseConnection.Execute(@"INSERT INTO Customer(phonenr,name, email) VALUES (@phonenr, @name, @email)", new { phonenr = customer.PhoneNumber, name = customer.FullName, email = customer.Email});
+        }
+        public static Customer GetCustomerByPhoneNumber(int phoneNr)
+        {
+            return DBConnection.DatabaseConnection.QuerySingle(@"SELECT 1 FROM Customer WHERE phonenr = @phoneNr", new { phoneNr });
         }
         public static bool CheckCustomer(int phoneNr)
         {

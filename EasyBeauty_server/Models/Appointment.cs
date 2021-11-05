@@ -12,10 +12,11 @@
 
         public string Notes { set; get; }
 
-        public int EmployeeID { set; get; }
+        public Employee Employee { set; get; }
 
-        public int ServiceID { set; get; }
+        public Service Service { set; get; }
 
         public Customer Customer { set; get; }
+        public bool IsAccepted { set; get; }
     }
 }
