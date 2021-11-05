@@ -17,6 +17,8 @@
 
         public int ServiceID { set; get; }
         public string ServiceName { set; get; }
+        public double ServicePrice { set; get; }
+        public int ServiceDuration { set; get; }
 
         public string CustomerName { set; get; }
         public int PhoneNr { set; get; }

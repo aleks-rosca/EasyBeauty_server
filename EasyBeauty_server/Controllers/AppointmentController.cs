@@ -33,7 +33,9 @@
                         var service = new Service
                         {
                             ID = a.ServiceID,
-                            Name = a.ServiceName
+                            Name = a.ServiceName,
+                            Price = a.ServicePrice,
+                            Duration = a.ServiceDuration
                         };
                         var customer = new Customer
                         {

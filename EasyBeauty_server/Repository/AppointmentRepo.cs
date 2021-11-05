@@ -15,7 +15,9 @@ namespace EasyBeauty_server.Repository
             return DBConnection.DatabaseConnection.Query<AppointmentDB>(@"
             SELECT id, startTime, endTime, notes, employeeID,
             (SELECT fullName FROM Employee WHERE ID = A.employeeId) AS EmployeeName, serviceID,
-            (SELECT name FROM Service WHERE ID = A.serviceId) AS ServiceName,
+            (SELECT name FROM Service WHERE ID = A.serviceId) AS ServiceName, 
+            (SELECT price FROM Service WHERE ID = A.serviceId) as ServicePrice,
+            (SELECT duration FROM Service WHERE ID = A.serviceId) as ServiceDuration,
             (SELECT name FROM Customer WHERE phoneNr = A.phoneNr) AS CustomerName, phoneNr, isAccepted FROM Appointment AS A").ToList();
            
         }
