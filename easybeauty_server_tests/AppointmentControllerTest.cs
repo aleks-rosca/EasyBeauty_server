@@ -8,19 +8,31 @@ namespace easybeauty_server_tests
 {
     public class AppointmentControllerTest
     {
-        AppointmentController _controller;
+        readonly AppointmentController controller;
 
         public AppointmentControllerTest()
         {
-            _controller = new AppointmentController();
+            controller = new AppointmentController();
         }
         
         [Fact]
-        public void GetAllTests()
+        public void GetAllAppointments()
         {
-            var result = _controller.GetAppointments();
+            var result = controller.GetAppointments();
             Assert.IsType<List<Appointment>>(result);
+        }
 
+        [Fact]
+        public void GetAppointmentByEmployee()
+        {
+            var result = controller.GetAppointmentsByEmployee(1);
+            Assert.IsType<List<AppointmentDB>>(result);
+        }
+        [Fact]
+        public void GetEMployeeTimeSchedule()
+        {
+            var result = controller.GetEmployeeTimeSchedule(1);
+            Assert.IsType<List<EmployeeSchedule>>(result);
         }
     }
 }
