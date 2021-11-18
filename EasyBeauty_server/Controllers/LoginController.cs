@@ -13,30 +13,29 @@
     public class LoginController : ControllerBase
     {
         [HttpGet("check-email")]
-        public object CheckEmail([FromQuery]string email)
+        public IActionResult CheckEmail([FromQuery]string email)
         {
             try
             {
                 using (DBConnection.GetConnection())
                 {
                    var result = LoginRepo.CheckEmail(email);
-                    Console.WriteLine(result.Password);
                     if (result.Password == "" || result.Password == null)
                     {
-                        return new { hasLogin = false };
+                        return Ok(new { hasLogin = false });
                     }
-                    else return new { hasLogin = true };
+                    else return Ok(new { hasLogin = true });
                 }
             }
-            catch (Exception e)
+            catch (Exception)
             {
-                Console.Write(e.Message);
-                return new { error = "This email doesn't have an account" };
+                return StatusCode(500, new { error = "This email does not have an account" });
+                
             }
         }
 
         [HttpPut("create-password")]
-        public object CreatePassword([FromQuery]string email, string password, string repeatedPassword)
+        public IActionResult CreatePassword([FromQuery]string email, string password, string repeatedPassword)
         {
             try
             {
@@ -45,23 +44,22 @@
                     if (password == repeatedPassword || password.Length > 6 || repeatedPassword.Length > 6)
                     {
                     LoginRepo.CreatePassword(email, Hashing.HashString(password));
-                        return new { success = "password created" };
+                        return Ok(new { success = "password created" });
                     }
                     else
                     {
-                        return new { error = "password invalid" };
+                        return Ok(new { error = "password invalid" });
                     }
                 }
             }
             catch (Exception e)
             {
-                Console.Write(e.Message);
-                return new { error = e.Message };
+                return StatusCode(500, "Error: " + e);
             }
         }
 
         [HttpGet("login")]
-        public object Login([FromQuery] string email, string password)
+        public IActionResult Login([FromQuery] string email, string password)
         {
             try
             {
@@ -69,7 +67,7 @@
                 {
                     var validateLogin = LoginRepo.CheckPassword(email, Hashing.HashString(password));
 
-                    if (!validateLogin) { return new { error = "Password incorrect" }; }
+                    if (!validateLogin) { return Ok(new { error = "Password incorrect" }); }
                     
                     var userInfo = LoginRepo.GetUserInfo(email);
              
@@ -79,33 +77,31 @@
                     LoginRepo.SetToken(userInfo.Id, token);
                     var plainTextBytes = System.Text.Encoding.UTF8.GetBytes(JsonSerializer.Serialize(userInfo));
                     var encryptCookie = Convert.ToBase64String(plainTextBytes);
-                    return new { cookie = encryptCookie };
+                    return Ok(new { cookie = encryptCookie });
 
                 }
             }
             catch (Exception e)
             {
-                Console.Write(e.Message);
-                return e.Message;
+                return StatusCode(500, "Error: " + e);
             }
         }
 
         [HttpDelete("logout")]
-        public object Logout([FromQuery]int id, string token)
+        public IActionResult Logout([FromQuery]int id, string token)
         {
             try
             {
                 using (DBConnection.GetConnection())
                 {
-                    if (!LoginRepo.CheckToken(id, token)) { return new { error = "Not logged in" }; };
+                    if (!LoginRepo.CheckToken(id, token)) { return Ok(new { error = "Not logged in" }); };
                     LoginRepo.RemoveToken(token);
-                    return new { success = "Logged out" };
+                    return Ok(new { success = "Logged out" });
                 }
             }
             catch (Exception e)
             {
-                Console.Write(e.Message);
-                return new { error = "Something interrupted" };
+                return StatusCode(500, "Error: " + e);
             }
         }
     }

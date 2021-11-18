@@ -12,25 +12,23 @@
     public class EmployeeController : ControllerBase
     {
         [HttpGet]
-        public List<Employee> GetEmployees()
+        public IActionResult GetEmployees()
         {
             try
             {
                 using (DBConnection.GetConnection())
                 {
-                    var result = EmployeeRepo.GetEmployees();
-                    return result;
+                    return Ok(EmployeeRepo.GetEmployees());
                 }
             }
             catch (Exception e)
             {
-                Console.Write(e.Message);
-                return new List<Employee>();
+                return StatusCode(500, "Error: " + e);
             }
         }
 
         [HttpPost]
-        public string CreateEmployee(Employee employee)
+        public IActionResult CreateEmployee(Employee employee)
         {
             try
             {
@@ -38,50 +36,52 @@
                 {
                     if (EmployeeRepo.CheckEmployeeEmail(employee.Email))
                     {
-                        return "Email already Exists!";
+                        return Ok(new {error = "Email already Exists!" });
                     }
                     EmployeeRepo.CreateEmployee(employee);
+                    return Ok(new { success = "Employee saved" });
 
                 }
             }
             catch (Exception e)
             {
-                Console.Write(e.Message);
+                return StatusCode(500, "Error: " + e);
             }
-            return "";
+
         }
 
         [HttpPut("{id}")]
-        public void EditEmployee(int id, [FromBody] Employee employee)
+        public IActionResult EditEmployee(int id, [FromBody] Employee employee)
         {
             try
             {
                 using (DBConnection.GetConnection())
                 {
                     EmployeeRepo.EditEmployee(id, employee);
-
+                    return Ok(new { success = "Employee saved" });
                 }
 
             }
             catch (Exception e)
             {
-                Console.Write(e.Message);
+                return StatusCode(500, "Error: " + e);
             }
         }
 
         [HttpDelete("{id}")]
-        public void DeleteEmployee(int id)
+        public IActionResult DeleteEmployee(int id)
         {
             try
             {
                 using (DBConnection.GetConnection())
                 {
                     EmployeeRepo.DeleteEmployee(id);
+                    return Ok(new { success = "Employee deleted" });
                 }
             }
             catch (Exception e)
             {
-                Console.Write(e);
+                return StatusCode(500, "Error: " + e);
             }
         }
     }

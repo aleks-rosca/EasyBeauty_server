@@ -15,20 +15,18 @@
     public class ServiceController : ControllerBase
     {
         [HttpGet]
-        public List<Service> GetServices()
+        public IActionResult GetServices()
         {
             try
             {
                 using (DBConnection.GetConnection())
                 {
-                    var result = ServiceRepo.GetServices();
-                    return result;
+                    return Ok(ServiceRepo.GetServices());
                 }
             }
             catch (Exception e)
             {
-                Console.Write(e.Message);
-                return new List<Service>();
+                return StatusCode(500, "Error: " + e);
             }
         }
 
@@ -41,58 +39,59 @@
         [HttpPost]
         public IActionResult CreateService([FromBody] Service service)
         {
-            Console.WriteLine(service);
             try
             {
                 using (DBConnection.GetConnection())
                 {
                     if (ServiceRepo.CheckServiceName(service.Name))
                     {
-                        return BadRequest("Service name already exists!");
+                        return BadRequest(new {error = "Name already exists!"});
                     }
                     ServiceRepo.CreateService(service);
-                    return Ok("Service Created");
+                    return Ok(ServiceRepo.GetServices());
 
                 }
             }
             catch (Exception e)
             {
-                return StatusCode(500, e);
+
+                return StatusCode(500, "Error: " + e);
             }
             
         }
 
         [HttpPut("{id}")]
-        public void EditService(int id, [FromBody] Service service)
+        public IActionResult EditService(int id, [FromBody] Service service)
         {
             try
             {
                 using (DBConnection.GetConnection())
                 {
                     ServiceRepo.EditService(id, service);
-
+                    return Ok(ServiceRepo.GetServices());
                 }
 
             }
             catch (Exception e)
             {
-                Console.Write(e.Message);
+                return StatusCode(500, "Error: " + e);
             }
         }
 
         [HttpDelete("{id}")]
-        public void DeleteService(int id)
+        public IActionResult DeleteService(int id)
         {
             try
             {
                 using (DBConnection.GetConnection())
                 {
                     ServiceRepo.DeleteService(id);
+                    return Ok(ServiceRepo.GetServices());
                 }
             }
             catch (Exception e)
             {
-                Console.Write(e);
+                return StatusCode(500, "Error: " + e);
             }
         }
     }

@@ -12,7 +12,7 @@
     public class AppointmentController : ControllerBase
     {
         [HttpGet]
-        public List<Appointment> GetAppointments()
+        public IActionResult GetAppointments()
         {
             try
             {
@@ -55,18 +55,17 @@
                         list.Add(appointment);
                     }
 
-                    return list;
+                    return Ok(list);
                 }
             }
             catch (Exception e)
             {
-                Console.Write(e.Message);
-                return new List<Appointment>();
+                return StatusCode(500, "Error: " + e);
             }
         }
 
         [HttpGet("/appointment/{employeeId}")]
-        public List<AppointmentDB> GetAppointmentsByEmployee(int employeeId)
+        public IActionResult GetAppointmentsByEmployee(int employeeId)
         {
             try
             {
@@ -74,17 +73,16 @@
                 {
                     var result = AppointmentRepo.GetAppointmentsByEmployee(employeeId);
 
-                    return result;
+                    return Ok(result);
                 }
             }
             catch (Exception e)
             {
-                Console.Write(e.Message);
-                return new List<AppointmentDB>();
+                return StatusCode(500, "Error: " + e);
             }
         }
         [HttpGet("{employeeId}")]
-        public List<EmployeeSchedule> GetEmployeeTimeSchedule(int employeeId)
+        public IActionResult GetEmployeeTimeSchedule(int employeeId)
         {
             try
             {
@@ -92,17 +90,16 @@
                 {
                     var result = AppointmentRepo.GetEmployeeTimeSchedule(employeeId);
 
-                    return result;
+                    return Ok(result);
                 }
             }
             catch (Exception e)
             {
-                Console.Write(e.Message);
-                return new List<EmployeeSchedule>();
+                return StatusCode(500, "Error: " + e);
             }
         }
         [HttpPost]
-        public string CreateAppointment([FromBody] Appointment appointment)
+        public IActionResult CreateAppointment([FromBody] Appointment appointment)
         {
             try
             {
@@ -114,53 +111,53 @@
                     }
                     if(AppointmentRepo.CheckAppointment(appointment.Customer.PhoneNumber))
                     {
-                        return "Customer has an existing appointment";
+                        return Ok(new { error = "Customer has an existing appointment" });
                     }
                     else
                     {
                         AppointmentRepo.CreateAppointment(appointment);
-                        return "Appointment has been requested";
+                        return Ok(new { error = "Appointment has been requested" });
                     }
                 }
             }
             catch (Exception e)
             {
-                Console.Write(e.Message);
+                return StatusCode(500, "Error: " + e);
             }
-            return "";
         }
 
         [HttpPut("{id}")]
-        public void EditAppointment(int id, [FromBody] AppointmentDB appointmentDB)
+        public IActionResult EditAppointment(int id, [FromBody] AppointmentDB appointmentDB)
         {
             try
             {
                 using (DBConnection.GetConnection())
                 {
                     AppointmentRepo.EditAppointment(id, appointmentDB);
-
+                    return Ok(new {success = "Appointment saved" });
                 }
 
             }
             catch (Exception e)
             {
-                Console.Write(e.Message);
+                return StatusCode(500, "Error: " + e);
             }
         }
 
         [HttpDelete("{id}")]
-        public void Delete(int id)
+        public IActionResult Delete(int id)
         {
             try
             {
                 using (DBConnection.GetConnection())
                 {
                     AppointmentRepo.DeleteAppointment(id);
+                    return Ok(new { success = "Appointment deleted" });
                 }
             }
             catch (Exception e)
             {
-                Console.Write(e);
+                return StatusCode(500, "Error: " + e);
             }
         }
     }

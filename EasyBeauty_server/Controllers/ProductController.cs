@@ -14,7 +14,7 @@
     public class ProductController : ControllerBase
     {
         [HttpGet]
-        public List<Product> GetProducts()
+        public IActionResult GetProducts()
         {
 
             try
@@ -22,14 +22,12 @@
                 using (DBConnection.GetConnection())
                 {
                    // if (!LoginRepo.CheckToken(employeeId, token)) { throw new ArgumentException("Not Logged In"); }
-                    var result = ProductRepo.GetProducts();
-                    return result;
+                    return Ok(ProductRepo.GetProducts());
                 }
             }
             catch (Exception e)
             {
-                Console.Write(e.Message);
-                return new List<Product>();
+                return StatusCode(500, "Error: " + e);
             }
         }
 
@@ -39,7 +37,7 @@
             return "value";
         }
 
-        [HttpPost, DisableRequestSizeLimit]
+        [HttpPost]
         public IActionResult CreateProduct([FromBody] Product product)
         {
             try
@@ -48,10 +46,10 @@
                 {
                     if (ProductRepo.CheckProductName(product.Name))
                     {
-                        return BadRequest("Product name already exists!");
+                        return BadRequest(new { error = "Name already exists!" });
                     }
                     ProductRepo.CreateProduct(product);
-                    return Ok();
+                    return Ok(ProductRepo.GetProducts());
                 }
             }
             catch (Exception e)
@@ -61,36 +59,38 @@
         }
 
         [HttpPut("{id}")]
-        public void EditProduct(int id, [FromBody] Product product)
+        public IActionResult EditProduct(int id, [FromBody] Product product)
         {
             try
             {
                 using (DBConnection.GetConnection())
                 {
                     ProductRepo.EditProduct(id, product);
+                    return Ok(ProductRepo.GetProducts());
 
                 }
 
             }
             catch (Exception e)
             {
-                Console.Write(e.Message);
+                return StatusCode(500, "Error: " + e);
             }
         }
 
         [HttpDelete("{id}")]
-        public void DeleteProduct(int id)
+        public IActionResult DeleteProduct(int id)
         {
             try
             {
                 using (DBConnection.GetConnection())
                 {
                     ProductRepo.DeleteProduct(id);
+                    return Ok(ProductRepo.GetProducts());
                 }
             }
             catch (Exception e)
             {
-                Console.Write(e);
+                return StatusCode(500, "Error: " + e);
             }
         }
     }

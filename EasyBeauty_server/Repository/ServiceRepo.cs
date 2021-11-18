@@ -34,7 +34,7 @@
         {
             return DBConnection.DatabaseConnection.Query<Service>("Select * from Service").ToList();
         }
-        public static Service getServiceById(int id)
+        public static Service GetServiceById(int id)
         {
             return DBConnection.DatabaseConnection.QuerySingle(@"Select id, name from Service WHERE ID = @id", id);
         }
