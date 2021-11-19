@@ -126,7 +126,7 @@
             }
         }
 
-        [HttpPut("{id}")]
+        [HttpPut("{id:int}")]
         public IActionResult EditAppointment(int id, [FromBody] AppointmentDB appointmentDB)
         {
             try

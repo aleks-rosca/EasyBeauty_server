@@ -13,19 +13,17 @@ namespace easybeauty_server_tests
     public class ServiceControllerTest
     {
         readonly ServiceController controller;
-        ServiceRepo repo;
 
         public ServiceControllerTest()
         {
             controller = new ServiceController();
-            repo = new ServiceRepo();
         }
         [Fact]
         public List<Service> GetAllServices()
         {
             var result = controller.GetServices();
             Assert.IsType<List<Service>>(result);
-            return result;
+            return null;
 
         }
 
