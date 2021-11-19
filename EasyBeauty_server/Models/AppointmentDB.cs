@@ -22,7 +22,8 @@
 
         public string CustomerName { set; get; }
         public int PhoneNr { set; get; }
-
+        
+        public string CustomerEmail { set; get; }
         public bool IsAccepted { set; get; }
     }
 }

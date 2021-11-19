@@ -18,7 +18,8 @@ namespace EasyBeauty_server.Repository
             (SELECT name FROM Service WHERE ID = A.serviceId) AS ServiceName, 
             (SELECT price FROM Service WHERE ID = A.serviceId) as ServicePrice,
             (SELECT duration FROM Service WHERE ID = A.serviceId) as ServiceDuration,
-            (SELECT name FROM Customer WHERE phoneNr = A.phoneNr) AS CustomerName, phoneNr, isAccepted FROM Appointment AS A").ToList();
+            (SELECT name FROM Customer WHERE phoneNr = A.phoneNr) AS CustomerName,
+            (SELECT email FROM Customer WHERE phoneNr = A.phoneNr) AS CustomerEmail, phoneNr, isAccepted FROM Appointment AS A").ToList();
            
         }
         public static void CreateAppointment(Appointment appointment)

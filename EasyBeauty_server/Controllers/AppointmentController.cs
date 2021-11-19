@@ -1,4 +1,6 @@
-﻿namespace EasyBeauty_server.Controllers
+﻿using System.Linq;
+
+namespace EasyBeauty_server.Controllers
 {
     using EasyBeauty_server.DataAccess;
     using EasyBeauty_server.Models;
@@ -18,42 +20,23 @@
             {
                 using (DBConnection.GetConnection())
                 {
-                    
-                    var list = new List<Appointment>();
                     var result = AppointmentRepo.GetAppointments();
 
-                    foreach (var a in result)
+                    var list = (from a in result
+                    let employee = new Employee {ID = a.EmployeeID, FullName = a.EmployeeName}
+                    let service = new Service {ID = a.ServiceID, Name = a.ServiceName, Price = a.ServicePrice, Duration = a.ServiceDuration}
+                    let customer = new Customer {FullName = a.CustomerName, PhoneNumber = a.PhoneNr, Email = a.CustomerEmail}
+                    select new Appointment
                     {
-                        var employee = new Employee
-                        {
-                            ID = a.EmployeeID,
-                            FullName = a.EmployeeName
-                        };
-                        var service = new Service
-                        {
-                            ID = a.ServiceID,
-                            Name = a.ServiceName,
-                            Price = a.ServicePrice,
-                            Duration = a.ServiceDuration
-                        };
-                        var customer = new Customer
-                        {
-                            FullName = a.CustomerName,
-                            PhoneNumber = a.PhoneNr
-                        };
-                        var appointment = new Appointment
-                        {
-                            ID = a.ID,
-                            StartTime = a.StartTime,
-                            EndTime = a.EndTime,
-                            Notes = a.Notes,
-                            Employee = employee,
-                            Service = service,
-                            Customer = customer,
-                            IsAccepted = a.IsAccepted
-                        };
-                        list.Add(appointment);
-                    }
+                        ID = a.ID,
+                        StartTime = a.StartTime,
+                        EndTime = a.EndTime,
+                        Notes = a.Notes,
+                        Employee = employee,
+                        Service = service,
+                        Customer = customer,
+                        IsAccepted = a.IsAccepted
+                    }).ToList();
 
                     return Ok(list);
                 }

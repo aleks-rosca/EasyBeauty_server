@@ -4,7 +4,7 @@ namespace EasyBeauty_server.Models
 {
     public class EmployeeSchedule
     {
-        public DateTime StrartDate { set; get; }
-        public DateTime EndDate { set; get; }
+        public DateTime StartTime { set; get; }
+        public DateTime EndTime { set; get; }
     }
 }
