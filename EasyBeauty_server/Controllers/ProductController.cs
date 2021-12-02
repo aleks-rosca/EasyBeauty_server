@@ -1,28 +1,26 @@
-﻿namespace EasyBeauty_server.Controllers
+﻿using EasyBeauty_server.Helpers;
+
+namespace EasyBeauty_server.Controllers
 {
     using EasyBeauty_server.DataAccess;
     using EasyBeauty_server.Models;
     using EasyBeauty_server.Repository;
     using Microsoft.AspNetCore.Mvc;
     using System;
-    using System.Collections.Generic;
-    using System.IO;
-    using System.Net.Http.Headers;
 
     [Route("api/[controller]")]
     [ApiController]
     public class ProductController : ControllerBase
     {
-        [HttpGet]
-        public IActionResult GetProducts()
+        [HttpGet("{cookie}")]
+        public IActionResult GetProducts(string cookie)
         {
-
+            var user = CookieEncDec.DecryptCookie(cookie);
             try
             {
                 using (DBConnection.GetConnection())
                 {
-                   // if (!LoginRepo.CheckToken(employeeId, token)) { throw new ArgumentException("Not Logged In"); }
-                    return Ok(ProductRepo.GetProducts());
+                    return LoginRepo.CheckLogin(user.Id) ? Ok(ProductRepo.GetProducts()) : StatusCode(401, "Not Logged In");
                 }
             }
             catch (Exception e)
@@ -30,20 +28,16 @@
                 return StatusCode(500, "Error: " + e);
             }
         }
-
-        [HttpGet("{id}")]
-        public string Get(int id)
+        
+        [HttpPost("{cookie}")]
+        public IActionResult CreateProduct([FromBody] Product product, string cookie)
         {
-            return "value";
-        }
-
-        [HttpPost]
-        public IActionResult CreateProduct([FromBody] Product product)
-        {
+            var user = CookieEncDec.DecryptCookie(cookie);
             try
             {
                 using (DBConnection.GetConnection())
                 {
+                    if (!LoginRepo.CheckLogin(user.Id)) return StatusCode(401, "Not Logged in");
                     if (ProductRepo.CheckProductName(product.Name))
                     {
                         return BadRequest(new { error = "Name already exists!" });
@@ -58,16 +52,17 @@
             }
         }
 
-        [HttpPut("{id}")]
-        public IActionResult EditProduct(int id, [FromBody] Product product)
+        [HttpPut("{id},{cookie}")]
+        public IActionResult EditProduct(int id, [FromBody] Product product, string cookie)
         {
+            var user = CookieEncDec.DecryptCookie(cookie);
             try
             {
                 using (DBConnection.GetConnection())
                 {
+                    if (!LoginRepo.CheckLogin(user.Id)) return StatusCode(401, "Not Logged in");
                     ProductRepo.EditProduct(id, product);
                     return Ok(ProductRepo.GetProducts());
-
                 }
 
             }
@@ -77,13 +72,15 @@
             }
         }
 
-        [HttpDelete("{id}")]
-        public IActionResult DeleteProduct(int id)
+        [HttpDelete("{id},{cookie}")]
+        public IActionResult DeleteProduct(int id, string cookie)
         {
+            var user = CookieEncDec.DecryptCookie(cookie);
             try
             {
                 using (DBConnection.GetConnection())
                 {
+                    if (!LoginRepo.CheckLogin(user.Id)) return StatusCode(401, "Not Logged in");
                     ProductRepo.DeleteProduct(id);
                     return Ok(ProductRepo.GetProducts());
                 }

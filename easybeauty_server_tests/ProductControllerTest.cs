@@ -14,13 +14,13 @@ namespace easybeauty_server_tests
         {
             controller = new ProductController();
         }
-        [Fact]
-        public void GetAllProducts()
-        {
-            var result = controller.GetProducts();
-            Assert.IsType<List<Product>>(result);
-
-        }
+        // [Fact]
+        // public void GetAllProducts()
+        // {
+        //     var result = controller.GetProducts();
+        //     Assert.IsType<List<Product>>(result);
+        //
+        // }
 
     }
 }

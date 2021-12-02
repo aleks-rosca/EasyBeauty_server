@@ -1,4 +1,5 @@
 ﻿using System.Linq;
+using EasyBeauty_server.Helpers;
 
 namespace EasyBeauty_server.Controllers
 {
@@ -12,13 +13,15 @@ namespace EasyBeauty_server.Controllers
     [ApiController]
     public class AppointmentController : ControllerBase
     {
-        [HttpGet]
-        public IActionResult GetAppointments()
+        [HttpGet("{cookie}")]
+        public IActionResult GetAppointments(string cookie)
         {
+            var user = CookieEncDec.DecryptCookie(cookie);
             try
             {
                 using (DBConnection.GetConnection())
                 {
+                    if (!LoginRepo.CheckLogin(user.Id)) return StatusCode(401, "Not Logged in");
                     var result = AppointmentRepo.GetAppointments();
         
                     var list = (from a in result
@@ -46,13 +49,15 @@ namespace EasyBeauty_server.Controllers
             }
         }
 
-        [HttpGet("/appointment/{employeeId}")]
-        public IActionResult GetAppointmentsByEmployee(int employeeId)
+        [HttpGet("{employeeId},{cookie}")]
+        public IActionResult GetAppointmentsByEmployee(int employeeId, string cookie)
         {
+            var user = CookieEncDec.DecryptCookie(cookie);
             try
             {
                 using (DBConnection.GetConnection())
                 {
+                    if (!LoginRepo.CheckLogin(user.Id)) return StatusCode(401, "Not Logged in");
                     var result = AppointmentRepo.GetAppointmentsByEmployee(employeeId);
 
                     return Ok(result);
@@ -63,7 +68,7 @@ namespace EasyBeauty_server.Controllers
                 return StatusCode(500, "Error: " + e);
             }
         }
-        [HttpGet("{employeeId}")]
+        [HttpGet("/schedule/{employeeId}")]
         public IActionResult GetEmployeeTimeSchedule(int employeeId)
         {
             try
@@ -108,13 +113,15 @@ namespace EasyBeauty_server.Controllers
             }
         }
 
-        [HttpPut("{id:int}")]
-        public IActionResult EditAppointment(int id, [FromBody] AppointmentDB appointmentDB)
+        [HttpPut("{id},{cookie}")]
+        public IActionResult EditAppointment(int id, [FromBody] AppointmentDB appointmentDB, string cookie)
         {
+            var user = CookieEncDec.DecryptCookie(cookie);
             try
             {
                 using (DBConnection.GetConnection())
                 {
+                    if (!LoginRepo.CheckLogin(user.Id)) return StatusCode(401, "Not Logged in");
                     AppointmentRepo.EditAppointment(id, appointmentDB);
                     return Ok(new {success = "Appointment saved" });
                 }
@@ -126,13 +133,15 @@ namespace EasyBeauty_server.Controllers
             }
         }
 
-        [HttpDelete("{id}")]
-        public IActionResult Delete(int id)
+        [HttpDelete("{id},{cookie}")]
+        public IActionResult Delete(int id, string cookie)
         {
+            var user = CookieEncDec.DecryptCookie(cookie);
             try
             {
                 using (DBConnection.GetConnection())
                 {
+                    if (!LoginRepo.CheckLogin(user.Id)) return StatusCode(401, "Not Logged in");
                     AppointmentRepo.DeleteAppointment(id);
                     return Ok(new { success = "Appointment deleted" });
                 }

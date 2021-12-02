@@ -1,14 +1,12 @@
-﻿namespace EasyBeauty_server.Controllers
+﻿using EasyBeauty_server.Helpers;
+
+namespace EasyBeauty_server.Controllers
 {
     using EasyBeauty_server.DataAccess;
     using EasyBeauty_server.Models;
     using EasyBeauty_server.Repository;
     using Microsoft.AspNetCore.Mvc;
     using System;
-    using System.Collections.Generic;
-    using System.IO;
-    using System.Text;
-    using static System.Net.Mime.MediaTypeNames;
 
     [Route("api/[controller]")]
     [ApiController]
@@ -29,20 +27,16 @@
                 return StatusCode(500, "Error: " + e);
             }
         }
-
-        [HttpGet("{id}")]
-        public string Get(int id)
+        
+        [HttpPost("{cookie}")]
+        public IActionResult CreateService([FromBody] Service service, string cookie)
         {
-            return "value";
-        }
-
-        [HttpPost]
-        public IActionResult CreateService([FromBody] Service service)
-        {
+            var user = CookieEncDec.DecryptCookie(cookie);
             try
             {
                 using (DBConnection.GetConnection())
                 {
+                    if (!LoginRepo.CheckLogin(user.Id)) return StatusCode(401, "Not Logged in");
                     if (ServiceRepo.CheckServiceName(service.Name))
                     {
                         return BadRequest(new {error = "Name already exists!"});
@@ -60,13 +54,15 @@
             
         }
 
-        [HttpPut("{id}")]
-        public IActionResult EditService(int id, [FromBody] Service service)
+        [HttpPut("{id},{cookie}")]
+        public IActionResult EditService(int id, [FromBody] Service service, string cookie)
         {
+            var user = CookieEncDec.DecryptCookie(cookie);
             try
             {
                 using (DBConnection.GetConnection())
                 {
+                    if (!LoginRepo.CheckLogin(user.Id)) return StatusCode(401, "Not Logged in");
                     ServiceRepo.EditService(id, service);
                     return Ok(ServiceRepo.GetServices());
                 }
@@ -78,13 +74,15 @@
             }
         }
 
-        [HttpDelete("{id}")]
-        public IActionResult DeleteService(int id)
+        [HttpDelete("{id},{cookie}")]
+        public IActionResult DeleteService(int id, string cookie)
         {
+            var user = CookieEncDec.DecryptCookie(cookie);
             try
             {
                 using (DBConnection.GetConnection())
                 {
+                    if (!LoginRepo.CheckLogin(user.Id)) return StatusCode(401, "Not Logged in");
                     ServiceRepo.DeleteService(id);
                     return Ok(ServiceRepo.GetServices());
                 }
@@ -92,12 +90,8 @@
             catch (Exception e)
             {
                 if (e.Message.Contains("The DELETE statement conflicted with the REFERENCE constraint "))
-                {
                     return StatusCode(501, "You cannot delete this service, as it is used in one or more appointment");
-                }
-                Console.WriteLine(e);
                 return StatusCode(500, "Error: " + e);
-                
             }
         }
     }

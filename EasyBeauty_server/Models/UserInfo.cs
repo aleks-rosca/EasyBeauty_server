@@ -1,11 +1,13 @@
 ﻿
+using Newtonsoft.Json;
+
 namespace EasyBeauty_server.Models
 {
     public class UserInfo
     {
-        public int Id { get; set; }
-        public string FullName { get; set; }
-        public string Role { get; set; }
-        public string Token { get; set; }
+        [JsonProperty("Id")]public int Id { get; set; }
+        [JsonProperty("FullName")]public string FullName { get; set; }
+        [JsonProperty("Role")]public string Role { get; set; }
+        [JsonProperty("Token")]public string Token { get; set; }
     }
 }

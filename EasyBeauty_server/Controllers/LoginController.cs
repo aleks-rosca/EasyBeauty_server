@@ -20,17 +20,12 @@
                 using (DBConnection.GetConnection())
                 {
                    var result = LoginRepo.CheckEmail(email);
-                    if (result.Password == "" || result.Password == null)
-                    {
-                        return Ok(new { hasLogin = false });
-                    }
-                    else return Ok(new { hasLogin = true });
+                   return Ok(string.IsNullOrEmpty(result.Password) ? new { hasLogin = false } : new { hasLogin = true });
                 }
             }
             catch (Exception)
             {
                 return StatusCode(500, new { error = "This email does not have an account" });
-                
             }
         }
 
@@ -46,10 +41,8 @@
                         LoginRepo.CreatePassword(email, Hashing.HashString(password));
                         return Ok(new { success = "password created" });
                     }
-                    else
-                    {
-                        return Ok(new { error = "password invalid" });
-                    }
+
+                    return Ok(new { error = "password invalid" });
                 }
             }
             catch (Exception e)
@@ -66,19 +59,13 @@
                 using (DBConnection.GetConnection())
                 {
                     var validateLogin = LoginRepo.CheckPassword(email, Hashing.HashString(password));
-
                     if (!validateLogin) { return Ok(new { error = "Password incorrect" }); }
-                    
                     var userInfo = LoginRepo.GetUserInfo(email);
-             
                     var token = Hashing.HashString(email, DateTime.Now.ToString());
                     userInfo.Token = token;
-
                     LoginRepo.SetToken(userInfo.Id, token);
-                    var plainTextBytes = System.Text.Encoding.UTF8.GetBytes(JsonSerializer.Serialize(userInfo));
-                    var encryptCookie = Convert.ToBase64String(plainTextBytes);
+                    var encryptCookie = CookieEncDec.EncryptCookie(userInfo);
                     return Ok(new { cookie = encryptCookie });
-
                 }
             }
             catch (Exception e)
@@ -87,15 +74,16 @@
             }
         }
 
-        [HttpDelete("logout")]
-        public IActionResult Logout([FromQuery]int id, string token)
+        [HttpDelete("{cookie}")]
+        public IActionResult Logout([FromQuery]string cookie)
         {
+            var user = CookieEncDec.DecryptCookie(cookie);
             try
             {
                 using (DBConnection.GetConnection())
                 {
-                    if (!LoginRepo.CheckToken(id, token)) { return Ok(new { error = "Not logged in" }); }
-                    LoginRepo.RemoveToken(token);
+                    if (!LoginRepo.CheckToken(user.Id, user.Token)) { return Ok(new { error = "Not logged in" }); }
+                    LoginRepo.RemoveToken(user.Token);
                     return Ok(new { success = "Logged out" });
                 }
             }

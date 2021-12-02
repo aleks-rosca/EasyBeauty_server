@@ -1,4 +1,6 @@
-﻿namespace EasyBeauty_server.Controllers
+﻿using EasyBeauty_server.Helpers;
+
+namespace EasyBeauty_server.Controllers
 {
     using EasyBeauty_server.DataAccess;
     using EasyBeauty_server.Models;
@@ -10,14 +12,15 @@
     [ApiController]
     public class EmployeeController : ControllerBase
     {
-        [HttpGet]
-        public IActionResult GetEmployees()
+        [HttpGet("{cookie}")]
+        public IActionResult GetEmployees(string cookie)
         {
+            var user = CookieEncDec.DecryptCookie(cookie);
             try
             {
                 using (DBConnection.GetConnection())
                 {
-                    return Ok(EmployeeRepo.GetEmployees());
+                    return !LoginRepo.CheckLogin(user.Id) ? StatusCode(401, "Not Logged in") : Ok(EmployeeRepo.GetEmployees());
                 }
             }
             catch (Exception e)
@@ -26,13 +29,15 @@
             }
         }
 
-        [HttpPost]
-        public IActionResult CreateEmployee(Employee employee)
+        [HttpPost("{cookie}")]
+        public IActionResult CreateEmployee(Employee employee, string cookie)
         {
+            var user = CookieEncDec.DecryptCookie(cookie);
             try
             {
                 using (DBConnection.GetConnection())
                 {
+                    if (!LoginRepo.CheckLogin(user.Id)) return StatusCode(401, "Not Logged in");
                     if (EmployeeRepo.CheckEmployeeEmail(employee.Email))
                     {
                         return Ok(new {error = "Email already Exists!" });
@@ -49,13 +54,15 @@
 
         }
 
-        [HttpPut("{id}")]
-        public IActionResult EditEmployee(int id, [FromBody] Employee employee)
+        [HttpPut("{id},{cookie}")]
+        public IActionResult EditEmployee(int id, [FromBody] Employee employee, string cookie)
         {
+            var user = CookieEncDec.DecryptCookie(cookie);
             try
             {
                 using (DBConnection.GetConnection())
                 {
+                    if (!LoginRepo.CheckLogin(user.Id)) return StatusCode(401, "Not Logged in");
                     EmployeeRepo.EditEmployee(id, employee);
                     return Ok(new { success = "Employee saved" });
                 }
@@ -67,13 +74,15 @@
             }
         }
 
-        [HttpDelete("{id}")]
-        public IActionResult DeleteEmployee(int id)
+        [HttpDelete("{id},{cookie}")]
+        public IActionResult DeleteEmployee(int id, string cookie)
         {
+            var user = CookieEncDec.DecryptCookie(cookie);
             try
             {
                 using (DBConnection.GetConnection())
                 {
+                    if (!LoginRepo.CheckLogin(user.Id)) return StatusCode(401, "Not Logged in");
                     EmployeeRepo.DeleteEmployee(id);
                     return Ok(new { success = "Employee deleted" });
                 }

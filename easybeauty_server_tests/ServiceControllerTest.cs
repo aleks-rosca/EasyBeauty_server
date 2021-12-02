@@ -41,7 +41,7 @@ namespace easybeauty_server_tests
                 Duration = 30
             };
 
-                controller.CreateService(s);
+                controller.CreateService(s,"");
                 List<Service> list = GetAllServices();
                 foreach (var l in list)
                 {
