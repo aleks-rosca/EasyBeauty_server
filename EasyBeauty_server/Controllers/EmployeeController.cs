@@ -1,4 +1,5 @@
 ﻿using EasyBeauty_server.Helpers;
+using Microsoft.AspNetCore.Components;
 
 namespace EasyBeauty_server.Controllers
 {
@@ -12,15 +13,14 @@ namespace EasyBeauty_server.Controllers
     [ApiController]
     public class EmployeeController : ControllerBase
     {
-        [HttpGet("{cookie}")]
-        public IActionResult GetEmployees(string cookie)
+        [HttpGet]
+        public IActionResult GetEmployees()
         {
-            var user = CookieEncDec.DecryptCookie(cookie);
             try
             {
                 using (DBConnection.GetConnection())
                 {
-                    return !LoginRepo.CheckLogin(user.Id) ? StatusCode(401, "Not Logged in") : Ok(EmployeeRepo.GetEmployees());
+                    return Ok(EmployeeRepo.GetEmployees());
                 }
             }
             catch (Exception e)
@@ -29,8 +29,8 @@ namespace EasyBeauty_server.Controllers
             }
         }
 
-        [HttpPost("{cookie}")]
-        public IActionResult CreateEmployee(Employee employee, string cookie)
+        [HttpPost]
+        public IActionResult CreateEmployee([FromBody]Employee employee, [FromQuery]string cookie)
         {
             var user = CookieEncDec.DecryptCookie(cookie);
             try
@@ -54,8 +54,8 @@ namespace EasyBeauty_server.Controllers
 
         }
 
-        [HttpPut("{id},{cookie}")]
-        public IActionResult EditEmployee(int id, [FromBody] Employee employee, string cookie)
+        [HttpPut]
+        public IActionResult EditEmployee([FromQuery]int id, [FromBody] Employee employee, [FromQuery]string cookie)
         {
             var user = CookieEncDec.DecryptCookie(cookie);
             try
@@ -74,8 +74,8 @@ namespace EasyBeauty_server.Controllers
             }
         }
 
-        [HttpDelete("{id},{cookie}")]
-        public IActionResult DeleteEmployee(int id, string cookie)
+        [HttpDelete]
+        public IActionResult DeleteEmployee([FromQuery]int id, [FromQuery]string cookie)
         {
             var user = CookieEncDec.DecryptCookie(cookie);
             try

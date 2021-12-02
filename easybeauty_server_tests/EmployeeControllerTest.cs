@@ -17,7 +17,7 @@ namespace easybeauty_server_tests
         [Fact]
         public void GetAllEmployees()
         {
-            var result = controller.GetEmployees("");
+            var result = controller.GetEmployees();
             Assert.IsType<List<Employee>>(result);
 
         }

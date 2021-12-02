@@ -15,13 +15,7 @@ namespace easybeauty_server_tests
             controller = new AppointmentController();
         }
         
-        [Fact]
-        public void GetAllAppointments()
-        {
-            var result = controller.GetAppointments("");
-            Assert.IsType<List<Appointment>>(result);
-        }
-
+        
         [Fact]
         public void GetAppointmentByEmployee()
         {

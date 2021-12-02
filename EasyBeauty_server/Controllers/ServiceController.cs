@@ -28,8 +28,8 @@ namespace EasyBeauty_server.Controllers
             }
         }
         
-        [HttpPost("{cookie}")]
-        public IActionResult CreateService([FromBody] Service service, string cookie)
+        [HttpPost]
+        public IActionResult CreateService([FromBody] Service service, [FromQuery]string cookie)
         {
             var user = CookieEncDec.DecryptCookie(cookie);
             try
@@ -54,8 +54,8 @@ namespace EasyBeauty_server.Controllers
             
         }
 
-        [HttpPut("{id},{cookie}")]
-        public IActionResult EditService(int id, [FromBody] Service service, string cookie)
+        [HttpPut]
+        public IActionResult EditService([FromQuery]int id, [FromBody] Service service, [FromQuery]string cookie)
         {
             var user = CookieEncDec.DecryptCookie(cookie);
             try
@@ -74,8 +74,8 @@ namespace EasyBeauty_server.Controllers
             }
         }
 
-        [HttpDelete("{id},{cookie}")]
-        public IActionResult DeleteService(int id, string cookie)
+        [HttpDelete]
+        public IActionResult DeleteService([FromQuery]int id, [FromQuery]string cookie)
         {
             var user = CookieEncDec.DecryptCookie(cookie);
             try

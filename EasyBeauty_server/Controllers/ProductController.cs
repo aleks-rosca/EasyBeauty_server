@@ -12,8 +12,8 @@ namespace EasyBeauty_server.Controllers
     [ApiController]
     public class ProductController : ControllerBase
     {
-        [HttpGet("{cookie}")]
-        public IActionResult GetProducts(string cookie)
+        [HttpGet]
+        public IActionResult GetProducts([FromQuery]string cookie)
         {
             var user = CookieEncDec.DecryptCookie(cookie);
             try
@@ -29,8 +29,8 @@ namespace EasyBeauty_server.Controllers
             }
         }
         
-        [HttpPost("{cookie}")]
-        public IActionResult CreateProduct([FromBody] Product product, string cookie)
+        [HttpPost]
+        public IActionResult CreateProduct([FromBody] Product product, [FromQuery]string cookie)
         {
             var user = CookieEncDec.DecryptCookie(cookie);
             try
@@ -52,8 +52,8 @@ namespace EasyBeauty_server.Controllers
             }
         }
 
-        [HttpPut("{id},{cookie}")]
-        public IActionResult EditProduct(int id, [FromBody] Product product, string cookie)
+        [HttpPut]
+        public IActionResult EditProduct([FromQuery]int id, [FromBody] Product product, [FromQuery]string cookie)
         {
             var user = CookieEncDec.DecryptCookie(cookie);
             try
@@ -72,8 +72,8 @@ namespace EasyBeauty_server.Controllers
             }
         }
 
-        [HttpDelete("{id},{cookie}")]
-        public IActionResult DeleteProduct(int id, string cookie)
+        [HttpDelete]
+        public IActionResult DeleteProduct([FromQuery]int id, [FromQuery]string cookie)
         {
             var user = CookieEncDec.DecryptCookie(cookie);
             try
