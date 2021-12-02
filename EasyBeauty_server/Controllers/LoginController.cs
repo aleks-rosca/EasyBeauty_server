@@ -74,7 +74,7 @@
             }
         }
 
-        [HttpDelete("{cookie}")]
+        [HttpDelete("logout")]
         public IActionResult Logout([FromQuery]string cookie)
         {
             var user = CookieEncDec.DecryptCookie(cookie);
