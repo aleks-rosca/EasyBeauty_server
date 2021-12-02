@@ -5,7 +5,6 @@
     using EasyBeauty_server.Repository;
     using Microsoft.AspNetCore.Mvc;
     using System;
-    using System.Collections.Generic;
 
     [Route("api/[controller]")]
     [ApiController]
@@ -81,6 +80,11 @@
             }
             catch (Exception e)
             {
+                if (e.Message.Contains("The DELETE statement conflicted with the REFERENCE constraint"))
+                {
+                    return StatusCode(501,
+                        "You cannot delete this employee, as it has one or more booked appointments");
+                }
                 return StatusCode(500, "Error: " + e);
             }
         }

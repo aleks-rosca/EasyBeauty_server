@@ -43,7 +43,7 @@
                 {
                     if (password == repeatedPassword || password.Length > 6 || repeatedPassword.Length > 6)
                     {
-                    LoginRepo.CreatePassword(email, Hashing.HashString(password));
+                        LoginRepo.CreatePassword(email, Hashing.HashString(password));
                         return Ok(new { success = "password created" });
                     }
                     else
@@ -94,7 +94,7 @@
             {
                 using (DBConnection.GetConnection())
                 {
-                    if (!LoginRepo.CheckToken(id, token)) { return Ok(new { error = "Not logged in" }); };
+                    if (!LoginRepo.CheckToken(id, token)) { return Ok(new { error = "Not logged in" }); }
                     LoginRepo.RemoveToken(token);
                     return Ok(new { success = "Logged out" });
                 }

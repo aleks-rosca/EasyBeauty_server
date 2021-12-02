@@ -7,7 +7,6 @@ namespace EasyBeauty_server.Controllers
     using EasyBeauty_server.Repository;
     using Microsoft.AspNetCore.Mvc;
     using System;
-    using System.Collections.Generic;
 
     [Route("api/[controller]")]
     [ApiController]
@@ -21,7 +20,7 @@ namespace EasyBeauty_server.Controllers
                 using (DBConnection.GetConnection())
                 {
                     var result = AppointmentRepo.GetAppointments();
-
+        
                     var list = (from a in result
                     let employee = new Employee {ID = a.EmployeeID, FullName = a.EmployeeName}
                     let service = new Service {ID = a.ServiceID, Name = a.ServiceName, Price = a.ServicePrice, Duration = a.ServiceDuration}
@@ -37,7 +36,7 @@ namespace EasyBeauty_server.Controllers
                         Customer = customer,
                         IsAccepted = a.IsAccepted
                     }).ToList();
-
+        
                     return Ok(list);
                 }
             }

@@ -91,7 +91,13 @@
             }
             catch (Exception e)
             {
+                if (e.Message.Contains("The DELETE statement conflicted with the REFERENCE constraint "))
+                {
+                    return StatusCode(501, "You cannot delete this service, as it is used in one or more appointment");
+                }
+                Console.WriteLine(e);
                 return StatusCode(500, "Error: " + e);
+                
             }
         }
     }
