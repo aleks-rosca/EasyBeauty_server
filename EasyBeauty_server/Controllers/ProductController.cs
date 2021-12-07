@@ -1,12 +1,11 @@
-﻿using EasyBeauty_server.Helpers;
-
-namespace EasyBeauty_server.Controllers
+﻿namespace EasyBeauty_server.Controllers
 {
-    using EasyBeauty_server.DataAccess;
-    using EasyBeauty_server.Models;
-    using EasyBeauty_server.Repository;
+    using DataAccess;
+    using Models;
+    using Repository;
     using Microsoft.AspNetCore.Mvc;
     using System;
+    using EasyBeauty_server.Helpers;
 
     [Route("api/[controller]")]
     [ApiController]
@@ -25,7 +24,9 @@ namespace EasyBeauty_server.Controllers
             }
             catch (Exception e)
             {
-                return StatusCode(500, "Error: " + e);
+                Console.Write(e);
+                return StatusCode(500, new{error = e});
+                
             }
         }
         
@@ -38,6 +39,7 @@ namespace EasyBeauty_server.Controllers
                 using (DBConnection.GetConnection())
                 {
                     if (!LoginRepo.CheckLogin(user.Id)) return StatusCode(401, "Not Logged in");
+                    if (!EmployeeRepo.GetRole(user.Id).Equals("manager")) return StatusCode(402,new {error = "Wrong Privileges"});
                     if (ProductRepo.CheckProductName(product.Name))
                     {
                         return BadRequest(new { error = "Name already exists!" });
@@ -48,7 +50,7 @@ namespace EasyBeauty_server.Controllers
             }
             catch (Exception e)
             {
-                return StatusCode(500, "Error: " + e);
+                return StatusCode(500, new{error = e});
             }
         }
 
@@ -61,6 +63,7 @@ namespace EasyBeauty_server.Controllers
                 using (DBConnection.GetConnection())
                 {
                     if (!LoginRepo.CheckLogin(user.Id)) return StatusCode(401, "Not Logged in");
+                    if (!EmployeeRepo.GetRole(user.Id).Equals("manager")) return StatusCode(402,new {error = "Wrong Privileges"});
                     ProductRepo.EditProduct(id, product);
                     return Ok(ProductRepo.GetProducts());
                 }
@@ -68,7 +71,7 @@ namespace EasyBeauty_server.Controllers
             }
             catch (Exception e)
             {
-                return StatusCode(500, "Error: " + e);
+                return StatusCode(500, new{error = e});
             }
         }
 
@@ -81,13 +84,14 @@ namespace EasyBeauty_server.Controllers
                 using (DBConnection.GetConnection())
                 {
                     if (!LoginRepo.CheckLogin(user.Id)) return StatusCode(401, "Not Logged in");
+                    if (!EmployeeRepo.GetRole(user.Id).Equals("manager")) return StatusCode(402,new {error = "Wrong Privileges"});
                     ProductRepo.DeleteProduct(id);
                     return Ok(ProductRepo.GetProducts());
                 }
             }
             catch (Exception e)
             {
-                return StatusCode(500, "Error: " + e);
+                return StatusCode(500, new{error = e});
             }
         }
     }

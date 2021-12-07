@@ -3,14 +3,12 @@
     using Dapper;
     using EasyBeauty_server.DataAccess;
     using EasyBeauty_server.Models;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+    using System.Collections.Generic;
+    using System.Linq;
 
 
 
-public class ProductRepo
+    public static class ProductRepo
 {
     public static void CreateProduct(Product product)
     {
@@ -28,10 +26,10 @@ public class ProductRepo
         DBConnection.DatabaseConnection.Execute(@"DELETE FROM Product WHERE ID = @id;", new { id });
     }
 
-    public static void EditProduct(int id, Product Product)
+    public static void EditProduct(int id, Product product)
     {
         DBConnection.DatabaseConnection.Execute(@"UPDATE Product SET name = @name, description = @description, price = @price, image = @image WHERE ID = @id",
-            new { id, name = Product.Name, description = Product.Description, price = Product.Price, image = Product.Image});
+            new { id, name = product.Name, description = product.Description, price = product.Price, image = product.Image});
     }
 
     public static List<Product> GetProducts()

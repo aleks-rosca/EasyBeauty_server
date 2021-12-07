@@ -1,4 +1,6 @@
-﻿namespace EasyBeauty_server.Repository
+﻿using System;
+
+namespace EasyBeauty_server.Repository
 {
     using Dapper;
     using EasyBeauty_server.DataAccess;
@@ -37,6 +39,11 @@
         public static Employee getEmployeeById(int id)
         {
             return DBConnection.DatabaseConnection.QuerySingle(@"Select id, fullName from Employee WHERE ID = @id", id);
+        }
+
+        public static string GetRole(int id)
+        {
+            return DBConnection.DatabaseConnection.QueryFirstOrDefault<string>("Select role FROM Employee WHERE ID = @id",new {id});
         }
     }
 }

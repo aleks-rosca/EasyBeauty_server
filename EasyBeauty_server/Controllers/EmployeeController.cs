@@ -1,13 +1,13 @@
-﻿using EasyBeauty_server.Helpers;
-using Microsoft.AspNetCore.Components;
+﻿
 
 namespace EasyBeauty_server.Controllers
 {
-    using EasyBeauty_server.DataAccess;
-    using EasyBeauty_server.Models;
-    using EasyBeauty_server.Repository;
+    using DataAccess;
+    using Models;
+    using Repository;
     using Microsoft.AspNetCore.Mvc;
     using System;
+    using EasyBeauty_server.Helpers;
 
     [Route("api/[controller]")]
     [ApiController]
@@ -25,7 +25,7 @@ namespace EasyBeauty_server.Controllers
             }
             catch (Exception e)
             {
-                return StatusCode(500, "Error: " + e);
+                return StatusCode(500, new{error = e});
             }
         }
 
@@ -38,18 +38,15 @@ namespace EasyBeauty_server.Controllers
                 using (DBConnection.GetConnection())
                 {
                     if (!LoginRepo.CheckLogin(user.Id)) return StatusCode(401, "Not Logged in");
-                    if (EmployeeRepo.CheckEmployeeEmail(employee.Email))
-                    {
-                        return Ok(new {error = "Email already Exists!" });
-                    }
+                    if (!EmployeeRepo.GetRole(user.Id).Equals("manager")) return StatusCode(402,new {error = "Wrong Privileges"});
+                    if (EmployeeRepo.CheckEmployeeEmail(employee.Email)) return Ok(new {error = "Email already Exists!"});
                     EmployeeRepo.CreateEmployee(employee);
                     return Ok(new { success = "Employee saved" });
-
                 }
             }
             catch (Exception e)
             {
-                return StatusCode(500, "Error: " + e);
+                return StatusCode(500, new{error = e});
             }
 
         }
@@ -63,6 +60,7 @@ namespace EasyBeauty_server.Controllers
                 using (DBConnection.GetConnection())
                 {
                     if (!LoginRepo.CheckLogin(user.Id)) return StatusCode(401, "Not Logged in");
+                    if (!EmployeeRepo.GetRole(user.Id).Equals("manager")) return StatusCode(402,new {error = "Wrong Privileges"});
                     EmployeeRepo.EditEmployee(id, employee);
                     return Ok(new { success = "Employee saved" });
                 }
@@ -70,7 +68,7 @@ namespace EasyBeauty_server.Controllers
             }
             catch (Exception e)
             {
-                return StatusCode(500, "Error: " + e);
+                return StatusCode(500, new{error = e});
             }
         }
 
@@ -83,6 +81,7 @@ namespace EasyBeauty_server.Controllers
                 using (DBConnection.GetConnection())
                 {
                     if (!LoginRepo.CheckLogin(user.Id)) return StatusCode(401, "Not Logged in");
+                    if (!EmployeeRepo.GetRole(user.Id).Equals("manager")) return StatusCode(402,new {error = "Wrong Privileges"});
                     EmployeeRepo.DeleteEmployee(id);
                     return Ok(new { success = "Employee deleted" });
                 }
@@ -94,7 +93,7 @@ namespace EasyBeauty_server.Controllers
                     return StatusCode(501,
                         "You cannot delete this employee, as it has one or more booked appointments");
                 }
-                return StatusCode(500, "Error: " + e);
+                return StatusCode(500, new{error = e});
             }
         }
     }

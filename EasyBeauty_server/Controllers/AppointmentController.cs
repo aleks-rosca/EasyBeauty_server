@@ -1,12 +1,10 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using EasyBeauty_server.Helpers;
-
+﻿
 namespace EasyBeauty_server.Controllers
 {
     using EasyBeauty_server.DataAccess;
     using EasyBeauty_server.Models;
     using EasyBeauty_server.Repository;
+    using EasyBeauty_server.Helpers;
     using Microsoft.AspNetCore.Mvc;
     using System;
 
@@ -63,10 +61,10 @@ namespace EasyBeauty_server.Controllers
             }
             catch (Exception e)
             {
-                return StatusCode(500, "Error: " + e);
+                return StatusCode(500, new{error = e});
             }
         }
-        [HttpGet("/schedule/{employeeId}")]
+        [HttpGet("/api/Schedule/")]
         public IActionResult GetEmployeeTimeSchedule([FromQuery]int employeeId)
         {
             try
@@ -80,7 +78,7 @@ namespace EasyBeauty_server.Controllers
             }
             catch (Exception e)
             {
-                return StatusCode(500, "Error: " + e);
+                return StatusCode(500, new{error = e});
             }
         }
         [HttpPost]
@@ -113,7 +111,7 @@ namespace EasyBeauty_server.Controllers
             }
             catch (Exception e)
             {
-                return StatusCode(500, "Error: " + e);
+                return StatusCode(500, new{error = e});
             }
         }
 
@@ -133,7 +131,7 @@ namespace EasyBeauty_server.Controllers
             }
             catch (Exception e)
             {
-                return StatusCode(500, "Error: " + e);
+                return StatusCode(500, new{error = e});
             }
         }
 
@@ -152,7 +150,7 @@ namespace EasyBeauty_server.Controllers
             }
             catch (Exception e)
             {
-                return StatusCode(500, "Error: " + e);
+                return StatusCode(500, new{error = e});
             }
         }
     }

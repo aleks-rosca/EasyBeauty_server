@@ -25,7 +25,7 @@
             }
             catch (Exception)
             {
-                return StatusCode(500, new { error = "This email does not have an account" });
+                return StatusCode(401, new { error = "This email does not have an account" });
             }
         }
 
@@ -70,7 +70,7 @@
             }
             catch (Exception e)
             {
-                return StatusCode(500, "Error: " + e);
+                return StatusCode(500, new{error = e});
             }
         }
 
@@ -89,7 +89,7 @@
             }
             catch (Exception e)
             {
-                return StatusCode(500, "Error: " + e);
+                return StatusCode(500, new{error = e});
             }
         }
     }

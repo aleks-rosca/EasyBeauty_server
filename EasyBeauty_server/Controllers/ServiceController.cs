@@ -1,10 +1,11 @@
-﻿using EasyBeauty_server.Helpers;
+﻿
 
 namespace EasyBeauty_server.Controllers
 {
     using EasyBeauty_server.DataAccess;
     using EasyBeauty_server.Models;
     using EasyBeauty_server.Repository;
+    using EasyBeauty_server.Helpers;
     using Microsoft.AspNetCore.Mvc;
     using System;
 
@@ -24,7 +25,7 @@ namespace EasyBeauty_server.Controllers
             }
             catch (Exception e)
             {
-                return StatusCode(500, "Error: " + e);
+                return StatusCode(500, new{error = e});
             }
         }
         
@@ -37,6 +38,7 @@ namespace EasyBeauty_server.Controllers
                 using (DBConnection.GetConnection())
                 {
                     if (!LoginRepo.CheckLogin(user.Id)) return StatusCode(401, "Not Logged in");
+                    if (!EmployeeRepo.GetRole(user.Id).Equals("manager")) return StatusCode(402,new {error = "Wrong Privileges"});
                     if (ServiceRepo.CheckServiceName(service.Name))
                     {
                         return BadRequest(new {error = "Name already exists!"});
@@ -49,7 +51,7 @@ namespace EasyBeauty_server.Controllers
             catch (Exception e)
             {
 
-                return StatusCode(500, "Error: " + e);
+                return StatusCode(500,new{error = e});
             }
             
         }
@@ -63,6 +65,7 @@ namespace EasyBeauty_server.Controllers
                 using (DBConnection.GetConnection())
                 {
                     if (!LoginRepo.CheckLogin(user.Id)) return StatusCode(401, "Not Logged in");
+                    if (!EmployeeRepo.GetRole(user.Id).Equals("manager")) return StatusCode(402,new {error = "Wrong Privileges"});
                     ServiceRepo.EditService(id, service);
                     return Ok(ServiceRepo.GetServices());
                 }
@@ -70,7 +73,7 @@ namespace EasyBeauty_server.Controllers
             }
             catch (Exception e)
             {
-                return StatusCode(500, "Error: " + e);
+                return StatusCode(500, new{error = e});
             }
         }
 
@@ -83,15 +86,14 @@ namespace EasyBeauty_server.Controllers
                 using (DBConnection.GetConnection())
                 {
                     if (!LoginRepo.CheckLogin(user.Id)) return StatusCode(401, "Not Logged in");
+                    if (!EmployeeRepo.GetRole(user.Id).Equals("manager")) return StatusCode(402,new {error = "Wrong Privileges"});
                     ServiceRepo.DeleteService(id);
                     return Ok(ServiceRepo.GetServices());
                 }
             }
             catch (Exception e)
             {
-                if (e.Message.Contains("The DELETE statement conflicted with the REFERENCE constraint "))
-                    return StatusCode(501, "You cannot delete this service, as it is used in one or more appointment");
-                return StatusCode(500, "Error: " + e);
+                return e.Message.Contains("The DELETE statement conflicted with the REFERENCE constraint ") ? StatusCode(501, "You cannot delete this service, as it is used in one or more appointment") : StatusCode(500, new{error = e});
             }
         }
     }
