@@ -25,7 +25,7 @@ namespace EasyBeauty_server.Repository
         public static void CreateAppointment(Appointment appointment)
         {
             DBConnection.DatabaseConnection.Execute(@"INSERT INTO Appointment (employeeid, phonenr, serviceid, starttime, endtime, notes, isAccepted) VALUES (@employeeID, @phonenr, @serviceid, @starttime, @endtime, @notes, 0)",
-            new { employeeid = appointment.Employee.ID, phonenr = appointment.Customer.PhoneNumber, serviceid = appointment.Service.ID, starttime = appointment.StartTime, endtime = appointment.EndTime, notes = appointment.Notes });
+            new { employeeid = appointment.EmployeeId, phonenr = appointment.PhoneNr, serviceid = appointment.ServiceId, starttime = appointment.StartTime, endtime = appointment.EndTime, notes = appointment.Notes });
         }
         public static void CreateCustomer(Customer customer)
         {
@@ -48,14 +48,18 @@ namespace EasyBeauty_server.Repository
             DBConnection.DatabaseConnection.Execute(@"DELETE FROM Appointment WHERE ID = @id;", new { id});
         }
 
-        public static void EditAppointment(int id, AppointmentDB appointmentDB)
+        public static void EditAppointment(int id, Appointment appointment)
         {
             DBConnection.DatabaseConnection.Execute(@"UPDATE Appointment SET employeeid = @employeeid, serviceid= @serviceid, starttime= @starttime, endtime= @endtime, isAccepted= @isAccepted WHERE ID = @id",
-                new { id, employeeid = appointmentDB.EmployeeID, serviceid = appointmentDB.ServiceID, starttime = appointmentDB.StartTime, endtime = appointmentDB.EndTime, isAccepted= appointmentDB.IsAccepted });
+                new { id, employeeid = appointment.EmployeeId, serviceid = appointment.ServiceId, starttime = appointment.StartTime, endtime = appointment.EndTime, isAccepted= appointment.IsAccepted });
         }
-        public static List<AppointmentDB> GetAppointmentsByEmployee(int employeeId)
+        public static List<Appointment> GetAppointmentsByEmployee(int employeeId)
         {
-            return DBConnection.DatabaseConnection.Query<AppointmentDB>("Select * FROM Appointment WHERE employeeId = @employeeId", new { employeeId }).ToList();
+            return DBConnection.DatabaseConnection.Query<Appointment>(@"
+            SELECT id, startTime, endTime, notes, employeeID,
+            (SELECT name FROM Customer WHERE phoneNr = A.phoneNr) AS CustomerName,
+            (SELECT email FROM Customer WHERE phoneNr = A.phoneNr) AS CustomerEmail, phoneNr, isAccepted 
+            FROM Appointment AS A WHERE employeeID = @employeeId;", new { employeeId }).ToList();
         }
         public static List<EmployeeSchedule> GetEmployeeTimeSchedule(int employeeId)
         {

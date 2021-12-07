@@ -19,7 +19,7 @@ namespace easybeauty_server_tests
         [Fact]
         public void GetAppointmentByEmployee()
         {
-            var result = controller.GetAppointmentsByEmployee(1,"");
+            var result = controller.GetAppointmentsByEmployee(1);
             Assert.IsType<List<AppointmentDB>>(result);
         }
         [Fact]

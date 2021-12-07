@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using System.Linq;
 using EasyBeauty_server.Helpers;
 
 namespace EasyBeauty_server.Controllers
@@ -50,16 +51,13 @@ namespace EasyBeauty_server.Controllers
         // }
 
         [HttpGet]
-        public IActionResult GetAppointmentsByEmployee([FromQuery]int employeeId, [FromQuery]string cookie)
+        public IActionResult GetAppointmentsByEmployee([FromQuery]int employeeId)
         {
-            var user = CookieEncDec.DecryptCookie(cookie);
             try
             {
                 using (DBConnection.GetConnection())
                 {
-                    if (!LoginRepo.CheckLogin(user.Id)) return StatusCode(401, "Not Logged in");
                     var result = AppointmentRepo.GetAppointmentsByEmployee(employeeId);
-
                     return Ok(result);
                 }
             }
@@ -76,7 +74,7 @@ namespace EasyBeauty_server.Controllers
                 using (DBConnection.GetConnection())
                 {
                     var result = AppointmentRepo.GetEmployeeTimeSchedule(employeeId);
-
+                    
                     return Ok(result);
                 }
             }
@@ -92,11 +90,17 @@ namespace EasyBeauty_server.Controllers
             {
                 using (DBConnection.GetConnection())
                 {
-                    if (!AppointmentRepo.CheckCustomer(appointment.Customer.PhoneNumber))
+                    if (!AppointmentRepo.CheckCustomer(appointment.PhoneNr))
                     {
-                        AppointmentRepo.CreateCustomer(appointment.Customer);
+                        var customer = new Customer
+                        {
+                            PhoneNumber = appointment.PhoneNr,
+                            FullName = appointment.CustomerName,
+                            Email = appointment.CustomerEmail
+                        };
+                        AppointmentRepo.CreateCustomer(customer);
                     }
-                    if(AppointmentRepo.CheckAppointment(appointment.Customer.PhoneNumber))
+                    if(AppointmentRepo.CheckAppointment(appointment.PhoneNr))
                     {
                         return Ok(new { error = "Customer has an existing appointment" });
                     }
@@ -114,7 +118,7 @@ namespace EasyBeauty_server.Controllers
         }
 
         [HttpPut]
-        public IActionResult EditAppointment([FromQuery]int id, [FromBody] AppointmentDB appointmentDB, [FromQuery]string cookie)
+        public IActionResult EditAppointment([FromQuery]int id, [FromBody] Appointment appointment, [FromQuery]string cookie)
         {
             var user = CookieEncDec.DecryptCookie(cookie);
             try
@@ -122,7 +126,7 @@ namespace EasyBeauty_server.Controllers
                 using (DBConnection.GetConnection())
                 {
                     if (!LoginRepo.CheckLogin(user.Id)) return StatusCode(401, "Not Logged in");
-                    AppointmentRepo.EditAppointment(id, appointmentDB);
+                    AppointmentRepo.EditAppointment(id, appointment);
                     return Ok(new {success = "Appointment saved" });
                 }
 

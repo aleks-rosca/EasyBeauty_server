@@ -1,8 +1,8 @@
-﻿namespace EasyBeauty_server.Models
-{
-    using System;
+using System;
 
-    public class AppointmentDB
+namespace EasyBeauty_server.Models
+{
+    public class AppointmentManage
     {
         public int ID { set; get; }
         public DateTime StartTime { set; get; }
@@ -17,7 +17,6 @@
 
         public string CustomerName { set; get; }
         public int PhoneNr { set; get; }
-        
         public string CustomerEmail { set; get; }
         public bool IsAccepted { set; get; }
     }
