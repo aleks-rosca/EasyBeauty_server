@@ -88,7 +88,7 @@ namespace EasyBeauty_server.Controllers
             {
                 using (DBConnection.GetConnection())
                 {
-                    if (!LoginRepo.CheckLogin(user.Id)) return StatusCode(401, new{error = "Not Logged In"});
+                    if (!LoginRepo.CheckLogin(user.Id)) {return StatusCode(401, new{error = "Not Logged In"});}
                     if (!EmployeeRepo.GetRole(user.Id).Equals("manager")) return StatusCode(402,new {error = "Wrong Privileges"});
                     ServiceRepo.DeleteService(id);
                     return Ok(ServiceRepo.GetServices());

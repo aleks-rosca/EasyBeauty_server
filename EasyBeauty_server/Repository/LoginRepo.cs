@@ -43,7 +43,12 @@
 
         public static bool CheckLogin(int id)
         {
-            return DBConnection.DatabaseConnection.ExecuteScalar<bool>(@"SELECT 1 FROM Token WHERE employeeid = @id AND expiresOn > GETDATE()", new { id });
+            return DBConnection.DatabaseConnection.ExecuteScalar<bool>(@"
+            DECLARE @exists BIT
+            SET @exists = (SELECT 1 FROM Token WHERE employeeid = @id AND expiresOn > GETDATE())
+            SELECT @exists
+            IF (@exists IS NULL )
+            DELETE FROM Token WHERE employeeId = @id", new { id });
         }
     }
 }
