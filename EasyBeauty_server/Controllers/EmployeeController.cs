@@ -32,12 +32,13 @@ namespace EasyBeauty_server.Controllers
         [HttpPost]
         public IActionResult CreateEmployee([FromBody]Employee employee, [FromQuery]string cookie)
         {
+            if (string.IsNullOrEmpty(cookie)) return BadRequest(new {error = "internal error"});
             var user = CookieEncDec.DecryptCookie(cookie);
             try
             {
                 using (DBConnection.GetConnection())
                 {
-                    if (!LoginRepo.CheckLogin(user.Id)) return StatusCode(401, "Not Logged in");
+                    if (!LoginRepo.CheckLogin(user.Id)) return StatusCode(401, new{error = "Not Logged In"});
                     if (!EmployeeRepo.GetRole(user.Id).Equals("manager")) return StatusCode(402,new {error = "Wrong Privileges"});
                     if (EmployeeRepo.CheckEmployeeEmail(employee.Email)) return Ok(new {error = "Email already Exists!"});
                     EmployeeRepo.CreateEmployee(employee);
@@ -54,12 +55,13 @@ namespace EasyBeauty_server.Controllers
         [HttpPut]
         public IActionResult EditEmployee([FromQuery]int id, [FromBody] Employee employee, [FromQuery]string cookie)
         {
+            if (string.IsNullOrEmpty(cookie)) return BadRequest(new {error = "internal error"});
             var user = CookieEncDec.DecryptCookie(cookie);
             try
             {
                 using (DBConnection.GetConnection())
                 {
-                    if (!LoginRepo.CheckLogin(user.Id)) return StatusCode(401, "Not Logged in");
+                    if (!LoginRepo.CheckLogin(user.Id)) return StatusCode(401, new{error = "Not Logged In"});
                     if (!EmployeeRepo.GetRole(user.Id).Equals("manager")) return StatusCode(402,new {error = "Wrong Privileges"});
                     EmployeeRepo.EditEmployee(id, employee);
                     return Ok(new { success = "Employee saved" });
@@ -75,12 +77,13 @@ namespace EasyBeauty_server.Controllers
         [HttpDelete]
         public IActionResult DeleteEmployee([FromQuery]int id, [FromQuery]string cookie)
         {
+            if (string.IsNullOrEmpty(cookie)) return BadRequest(new {error = "internal error"});
             var user = CookieEncDec.DecryptCookie(cookie);
             try
             {
                 using (DBConnection.GetConnection())
                 {
-                    if (!LoginRepo.CheckLogin(user.Id)) return StatusCode(401, "Not Logged in");
+                    if (!LoginRepo.CheckLogin(user.Id)) return StatusCode(401, new{error = "Not Logged In"});
                     if (!EmployeeRepo.GetRole(user.Id).Equals("manager")) return StatusCode(402,new {error = "Wrong Privileges"});
                     EmployeeRepo.DeleteEmployee(id);
                     return Ok(new { success = "Employee deleted" });

@@ -118,12 +118,14 @@ namespace EasyBeauty_server.Controllers
         [HttpPut]
         public IActionResult EditAppointment([FromQuery]int id, [FromBody] Appointment appointment, [FromQuery]string cookie)
         {
+            if (string.IsNullOrEmpty(cookie)) return BadRequest(new {error = "internal error"});
+            
             var user = CookieEncDec.DecryptCookie(cookie);
             try
             {
                 using (DBConnection.GetConnection())
                 {
-                    if (!LoginRepo.CheckLogin(user.Id)) return StatusCode(401, "Not Logged in");
+                    if (!LoginRepo.CheckLogin(user.Id)) return StatusCode(401, new{error = "Not Logged In"});
                     AppointmentRepo.EditAppointment(id, appointment);
                     return Ok(new {success = "Appointment saved" });
                 }
@@ -138,12 +140,13 @@ namespace EasyBeauty_server.Controllers
         [HttpDelete]
         public IActionResult Delete([FromQuery]int id, [FromQuery]string cookie)
         {
+            if (string.IsNullOrEmpty(cookie)) return BadRequest(new {error = "internal error"});
             var user = CookieEncDec.DecryptCookie(cookie);
             try
             {
                 using (DBConnection.GetConnection())
                 {
-                    if (!LoginRepo.CheckLogin(user.Id)) return StatusCode(401, "Not Logged in");
+                    if (!LoginRepo.CheckLogin(user.Id)) return StatusCode(401, new{error = "Not Logged In"});
                     AppointmentRepo.DeleteAppointment(id);
                     return Ok(new { success = "Appointment deleted" });
                 }

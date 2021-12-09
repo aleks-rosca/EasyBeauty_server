@@ -32,12 +32,13 @@ namespace EasyBeauty_server.Controllers
         [HttpPost]
         public IActionResult CreateService([FromBody] Service service, [FromQuery]string cookie)
         {
+            if (string.IsNullOrEmpty(cookie)) return BadRequest(new {error = "internal error"});
             var user = CookieEncDec.DecryptCookie(cookie);
             try
             {
                 using (DBConnection.GetConnection())
                 {
-                    if (!LoginRepo.CheckLogin(user.Id)) return StatusCode(401, "Not Logged in");
+                    if (!LoginRepo.CheckLogin(user.Id)) return StatusCode(401, new{error = "Not Logged In"});
                     if (!EmployeeRepo.GetRole(user.Id).Equals("manager")) return StatusCode(402,new {error = "Wrong Privileges"});
                     if (ServiceRepo.CheckServiceName(service.Name))
                     {
@@ -59,12 +60,13 @@ namespace EasyBeauty_server.Controllers
         [HttpPut]
         public IActionResult EditService([FromQuery]int id, [FromBody] Service service, [FromQuery]string cookie)
         {
+            if (string.IsNullOrEmpty(cookie)) return BadRequest(new {error = "internal error"});
             var user = CookieEncDec.DecryptCookie(cookie);
             try
             {
                 using (DBConnection.GetConnection())
                 {
-                    if (!LoginRepo.CheckLogin(user.Id)) return StatusCode(401, "Not Logged in");
+                    if (!LoginRepo.CheckLogin(user.Id)) return StatusCode(401, new{error = "Not Logged In"});
                     if (!EmployeeRepo.GetRole(user.Id).Equals("manager")) return StatusCode(402,new {error = "Wrong Privileges"});
                     ServiceRepo.EditService(id, service);
                     return Ok(ServiceRepo.GetServices());
@@ -80,12 +82,13 @@ namespace EasyBeauty_server.Controllers
         [HttpDelete]
         public IActionResult DeleteService([FromQuery]int id, [FromQuery]string cookie)
         {
+            if (string.IsNullOrEmpty(cookie)) return BadRequest(new {error = "internal error"});
             var user = CookieEncDec.DecryptCookie(cookie);
             try
             {
                 using (DBConnection.GetConnection())
                 {
-                    if (!LoginRepo.CheckLogin(user.Id)) return StatusCode(401, "Not Logged in");
+                    if (!LoginRepo.CheckLogin(user.Id)) return StatusCode(401, new{error = "Not Logged In"});
                     if (!EmployeeRepo.GetRole(user.Id).Equals("manager")) return StatusCode(402,new {error = "Wrong Privileges"});
                     ServiceRepo.DeleteService(id);
                     return Ok(ServiceRepo.GetServices());

@@ -9,7 +9,6 @@ namespace EasyBeauty_server.Controllers
     [ApiController]
     public class PaymentController : ControllerBase
     {
-
         [HttpPost]
         public IActionResult Post([FromBody] Payment amount)
         {

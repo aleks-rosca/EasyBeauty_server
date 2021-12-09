@@ -8,10 +8,6 @@ namespace EasyBeauty_server.Helpers
     {
         public static UserInfo DecryptCookie(string cookie)
         {
-            if (cookie == null)
-            {
-                return new UserInfo();
-            }
             var modCookie = cookie.Replace('-', '+').Replace('_', '/').PadRight(4*((cookie.Length+3)/4), '=');
             var decryptCookie = Convert.FromBase64String(modCookie);
             var user = JsonSerializer.Deserialize<UserInfo>(decryptCookie);

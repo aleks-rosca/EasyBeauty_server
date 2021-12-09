@@ -14,12 +14,13 @@
         [HttpGet]
         public IActionResult GetProducts([FromQuery]string cookie)
         {
+            if (string.IsNullOrEmpty(cookie)) return BadRequest(new {error = "internal error"});
             var user = CookieEncDec.DecryptCookie(cookie);
             try
             {
                 using (DBConnection.GetConnection())
                 {
-                    return LoginRepo.CheckLogin(user.Id) ? Ok(ProductRepo.GetProducts()) : StatusCode(401, "Not Logged In");
+                    return LoginRepo.CheckLogin(user.Id) ? Ok(ProductRepo.GetProducts()) : StatusCode(401, new{error = "Not Logged In"});
                 }
             }
             catch (Exception e)
@@ -33,12 +34,13 @@
         [HttpPost]
         public IActionResult CreateProduct([FromBody] Product product, [FromQuery]string cookie)
         {
+            if (string.IsNullOrEmpty(cookie)) return BadRequest(new {error = "internal error"});
             var user = CookieEncDec.DecryptCookie(cookie);
             try
             {
                 using (DBConnection.GetConnection())
                 {
-                    if (!LoginRepo.CheckLogin(user.Id)) return StatusCode(401, "Not Logged in");
+                    if (!LoginRepo.CheckLogin(user.Id)) return StatusCode(401, new{error = "Not Logged In"});
                     if (!EmployeeRepo.GetRole(user.Id).Equals("manager")) return StatusCode(402,new {error = "Wrong Privileges"});
                     if (ProductRepo.CheckProductName(product.Name))
                     {
@@ -57,12 +59,13 @@
         [HttpPut]
         public IActionResult EditProduct([FromQuery]int id, [FromBody] Product product, [FromQuery]string cookie)
         {
+            if (string.IsNullOrEmpty(cookie)) return BadRequest(new {error = "internal error"});
             var user = CookieEncDec.DecryptCookie(cookie);
             try
             {
                 using (DBConnection.GetConnection())
                 {
-                    if (!LoginRepo.CheckLogin(user.Id)) return StatusCode(401, "Not Logged in");
+                    if (!LoginRepo.CheckLogin(user.Id)) return StatusCode(401, new{error = "Not Logged In"});
                     if (!EmployeeRepo.GetRole(user.Id).Equals("manager")) return StatusCode(402,new {error = "Wrong Privileges"});
                     ProductRepo.EditProduct(id, product);
                     return Ok(ProductRepo.GetProducts());
@@ -78,12 +81,13 @@
         [HttpDelete]
         public IActionResult DeleteProduct([FromQuery]int id, [FromQuery]string cookie)
         {
+            if (string.IsNullOrEmpty(cookie)) return BadRequest(new {error = "internal error"});
             var user = CookieEncDec.DecryptCookie(cookie);
             try
             {
                 using (DBConnection.GetConnection())
                 {
-                    if (!LoginRepo.CheckLogin(user.Id)) return StatusCode(401, "Not Logged in");
+                    if (!LoginRepo.CheckLogin(user.Id)) return StatusCode(401, new{error = "Not Logged In"});
                     if (!EmployeeRepo.GetRole(user.Id).Equals("manager")) return StatusCode(402,new {error = "Wrong Privileges"});
                     ProductRepo.DeleteProduct(id);
                     return Ok(ProductRepo.GetProducts());

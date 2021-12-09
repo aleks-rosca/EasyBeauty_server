@@ -1,4 +1,6 @@
-﻿namespace EasyBeauty_server.Controllers
+﻿using System.Globalization;
+
+namespace EasyBeauty_server.Controllers
 {
     using EasyBeauty_server.DataAccess;
     using EasyBeauty_server.Helpers;
@@ -36,13 +38,11 @@
             {
                 using (DBConnection.GetConnection())
                 {
-                    if (password == repeatedPassword || password.Length > 6 || repeatedPassword.Length > 6)
-                    {
-                        LoginRepo.CreatePassword(email, Hashing.HashString(password));
-                        return Ok(new { success = "password created" });
-                    }
+                    if (password != repeatedPassword && password.Length <= 6 && repeatedPassword.Length <= 6)
+                        return Ok(new {error = "password invalid"});
+                    LoginRepo.CreatePassword(email, Hashing.HashString(password));
+                    return Ok(new { success = "password created" });
 
-                    return Ok(new { error = "password invalid" });
                 }
             }
             catch (Exception e)
@@ -61,7 +61,7 @@
                     var validateLogin = LoginRepo.CheckPassword(email, Hashing.HashString(password));
                     if (!validateLogin) { return Ok(new { error = "Password incorrect" }); }
                     var userInfo = LoginRepo.GetUserInfo(email);
-                    var token = Hashing.HashString(email, DateTime.Now.ToString());
+                    var token = Hashing.HashString(email, DateTime.Now.ToString(CultureInfo.InvariantCulture));
                     userInfo.Token = token;
                     LoginRepo.SetToken(userInfo.Id, token);
                     var encryptCookie = CookieEncDec.EncryptCookie(userInfo);
@@ -77,6 +77,7 @@
         [HttpDelete("logout")]
         public IActionResult Logout([FromQuery]string cookie)
         {
+            if (string.IsNullOrEmpty(cookie)) return BadRequest(new {error = "internal error"});
             var user = CookieEncDec.DecryptCookie(cookie);
             try
             {
