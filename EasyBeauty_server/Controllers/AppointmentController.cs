@@ -1,4 +1,6 @@
 ﻿
+using System.Globalization;
+
 namespace EasyBeauty_server.Controllers
 {
     using EasyBeauty_server.DataAccess;
@@ -105,7 +107,8 @@ namespace EasyBeauty_server.Controllers
                     else
                     {
                         AppointmentRepo.CreateAppointment(appointment);
-                        return Ok(new { success = "Appointment has been requested" });
+                        
+                        return Ok(new { success = "Appointment has been requested on " + appointment.StartTime.ToString("dddd, dd MMMM", CultureInfo.InvariantCulture) + " at "+ appointment.StartTime.ToString("HH:mm")});
                     }
                 }
             }
@@ -125,8 +128,9 @@ namespace EasyBeauty_server.Controllers
             {
                 using (DBConnection.GetConnection())
                 {
-                    if (!LoginRepo.CheckLogin(user.Id)) return StatusCode(401, new{error = "Not Logged In"});
+                    if (!LoginRepo.CheckToken(user.Id, user.Token)) { return Ok(new { error = "Not logged in" }); }
                     AppointmentRepo.EditAppointment(id, appointment);
+                    //Notify.SendSMS(appointment.CustomerName+","+"Appointment has been approved on " + appointment.StartTime.ToString("dddd, dd MMMM", CultureInfo.InvariantCulture) + " at "+ appointment.StartTime.ToString("HH:mm"), appointment.PhoneNr);
                     return Ok(new {success = "Appointment saved" });
                 }
 
@@ -146,7 +150,7 @@ namespace EasyBeauty_server.Controllers
             {
                 using (DBConnection.GetConnection())
                 {
-                    if (!LoginRepo.CheckLogin(user.Id)) return StatusCode(401, new{error = "Not Logged In"});
+                    if (!LoginRepo.CheckToken(user.Id, user.Token)) { return Ok(new { error = "Not logged in" }); }
                     AppointmentRepo.DeleteAppointment(id);
                     return Ok(new { success = "Appointment deleted" });
                 }
