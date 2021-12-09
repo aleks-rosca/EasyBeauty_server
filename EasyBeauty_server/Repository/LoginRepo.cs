@@ -28,7 +28,7 @@
         
         public static void SetToken(int id, string token)
         {
-            DBConnection.DatabaseConnection.Execute(@"INSERT INTO Token(token, employeeid) VALUES (@token, @id)", new { token,  id });
+            DBConnection.DatabaseConnection.Execute(@"INSERT INTO Token(token, employeeid, expiresOn) VALUES (@token, @id, DATEADD(MINUTE, +30, GETDATE()))", new { token,  id });
         }
 
         public static void RemoveToken(string token)
@@ -38,12 +38,14 @@
 
         public static bool CheckToken(int id, string token)
         {
-            return DBConnection.DatabaseConnection.ExecuteScalar<bool>(@"SELECT 1 FROM Token WHERE employeeid = @id AND token = @token", new { id, token });
+            return DBConnection.DatabaseConnection.ExecuteScalar<bool>(@"
+        
+        SELECT 1 FROM Token WHERE employeeid = @id AND token = @token", new { id, token });
         }
 
         public static bool CheckLogin(int id)
         {
-            return DBConnection.DatabaseConnection.ExecuteScalar<bool>(@"SELECT 1 FROM Token WHERE employeeid = @id", new { id });
+            return DBConnection.DatabaseConnection.ExecuteScalar<bool>(@"SELECT 1 FROM Token WHERE employeeid = @id AND expiresOn > GETDATE()", new { id });
         }
     }
 }

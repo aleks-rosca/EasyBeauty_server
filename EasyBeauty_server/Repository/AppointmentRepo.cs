@@ -56,7 +56,7 @@ namespace EasyBeauty_server.Repository
         public static List<Appointment> GetAppointmentsByEmployee(int employeeId)
         {
             return DBConnection.DatabaseConnection.Query<Appointment>(@"
-            SELECT id, startTime, endTime, notes, employeeID,
+            SELECT id, startTime, endTime, serviceId, notes, employeeID,
             (SELECT name FROM Customer WHERE phoneNr = A.phoneNr) AS CustomerName,
             (SELECT email FROM Customer WHERE phoneNr = A.phoneNr) AS CustomerEmail, phoneNr, isAccepted 
             FROM Appointment AS A WHERE employeeID = @employeeId;", new { employeeId }).ToList();

@@ -105,7 +105,7 @@ namespace EasyBeauty_server.Controllers
                     else
                     {
                         AppointmentRepo.CreateAppointment(appointment);
-                        return Ok(new { error = "Appointment has been requested" });
+                        return Ok(new { success = "Appointment has been requested" });
                     }
                 }
             }
