@@ -107,7 +107,7 @@ namespace EasyBeauty_server.Controllers
                     else
                     {
                         AppointmentRepo.CreateAppointment(appointment);
-                        
+                        //Notify.SendSMS(appointment.CustomerName+","+" Appointment has been approved on " + appointment.StartTime.ToString("dddd, dd MMMM", CultureInfo.InvariantCulture) + " at "+ appointment.StartTime.ToString("HH:mm"), appointment.PhoneNr);
                         return Ok(new { success = "Appointment has been requested on " + appointment.StartTime.ToString("dddd, dd MMMM", CultureInfo.InvariantCulture) + " at "+ appointment.StartTime.ToString("HH:mm")});
                     }
                 }
