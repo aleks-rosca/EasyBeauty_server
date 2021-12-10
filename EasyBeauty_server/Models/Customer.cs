@@ -2,9 +2,10 @@
 {
     public class Customer
     {
-        public int PhoneNumber { get; set; }
+        public int PhoneNr { get; set; }
+        public string Name { get; set; }
         public string Email { get; set; }
-        public string FullName { get; set; }
+        
 
     }
 }

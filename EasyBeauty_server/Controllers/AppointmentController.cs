@@ -83,6 +83,24 @@ namespace EasyBeauty_server.Controllers
                 return StatusCode(500, new{error = e});
             }
         }
+
+        [HttpGet("/api/Customer/")]
+        public IActionResult CheckCustomer([FromQuery]int phoneNr)
+        {
+            try
+            {
+                using (DBConnection.GetConnection())
+                {
+                    return CustomerRepo.CheckCustomer(phoneNr) ? Ok(CustomerRepo.GetCustomerByPhoneNumber(phoneNr)) : StatusCode(401, new {isCustomer = false, phoneNr});
+                }
+            }
+            catch (Exception e)
+            {
+                return StatusCode(500, new {error = e});
+            }
+            
+        }
+        
         [HttpPost]
         public IActionResult CreateAppointment([FromBody] Appointment appointment)
         {
@@ -90,16 +108,32 @@ namespace EasyBeauty_server.Controllers
             {
                 using (DBConnection.GetConnection())
                 {
-                    if (!AppointmentRepo.CheckCustomer(appointment.PhoneNr))
+                    if (!CustomerRepo.CheckCustomer(appointment.PhoneNr))
                     {
                         var customer = new Customer
                         {
-                            PhoneNumber = appointment.PhoneNr,
-                            FullName = appointment.CustomerName,
+                            PhoneNr = appointment.PhoneNr,
+                            Name = appointment.CustomerName,
                             Email = appointment.CustomerEmail
                         };
-                        AppointmentRepo.CreateCustomer(customer);
+                        CustomerRepo.CreateCustomer(customer);
+                        
                     }
+                    else
+                    {
+                        var customer = CustomerRepo.GetCustomerByPhoneNumber(appointment.PhoneNr);
+                        if (!(appointment.CustomerName == customer.Name && appointment.CustomerEmail == customer.Email))
+                        {
+                            var newCustomer = new Customer
+                            {
+                                Email = appointment.CustomerEmail,
+                                Name = appointment.CustomerName,
+                                PhoneNr = appointment.PhoneNr
+                            };
+                            CustomerRepo.EditCustomer(appointment.PhoneNr, newCustomer);
+                        }
+                    }
+                    
                     if(AppointmentRepo.CheckAppointment(appointment.PhoneNr))
                     {
                         return Ok(new { error = "Customer has an existing appointment" });
@@ -107,7 +141,6 @@ namespace EasyBeauty_server.Controllers
                     else
                     {
                         AppointmentRepo.CreateAppointment(appointment);
-                        //Notify.SendSMS(appointment.CustomerName+","+" Appointment has been approved on " + appointment.StartTime.ToString("dddd, dd MMMM", CultureInfo.InvariantCulture) + " at "+ appointment.StartTime.ToString("HH:mm"), appointment.PhoneNr);
                         return Ok(new { success = "Appointment has been requested on " + appointment.StartTime.ToString("dddd, dd MMMM", CultureInfo.InvariantCulture) + " at "+ appointment.StartTime.ToString("HH:mm")});
                     }
                 }
