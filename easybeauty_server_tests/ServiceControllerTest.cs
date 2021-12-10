@@ -6,6 +6,7 @@ using EasyBeauty_server.Repository;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Microsoft.AspNetCore.Mvc;
 using Xunit;
 
 namespace easybeauty_server_tests
@@ -19,39 +20,12 @@ namespace easybeauty_server_tests
             controller = new ServiceController();
         }
         [Fact]
-        public List<Service> GetAllServices()
+        public  void GetAllServices()
         {
             var result = controller.GetServices();
-            Assert.IsType<List<Service>>(result);
-            return null;
-
-        }
-
-        [Fact]
-        public void CreateService()
-        {
-            using (DBConnection.GetConnection())
-            {
-                var s = new Service
-            {
-                Name = "from xTest",
-                Description = "some tests",
-                Price = 220,
-                Image = "",
-                Duration = 30
-            };
-
-                controller.CreateService(s,"");
-                List<Service> list = GetAllServices();
-                foreach (var l in list)
-                {
-                    if (l.Name.Equals(s.Name))
-                    {
-                        Assert.Equal(l.Name, s.Name);
-                    }
-                }
-            }
-            
+            var okResult = result as OkObjectResult;
+            Assert.NotNull(result);
+            Assert.Equal(200, okResult?.StatusCode);
         }
 
     }

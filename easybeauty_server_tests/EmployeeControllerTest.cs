@@ -19,8 +19,9 @@ namespace easybeauty_server_tests
         public void GetAllEmployees()
         {
             var result = controller.GetEmployees();
-            Assert.IsType<List<IActionResult>>(result);
-
+            var okResult = result as OkObjectResult;
+            Assert.NotNull(result);
+            Assert.Equal(200, okResult?.StatusCode);
         }
             
     }
