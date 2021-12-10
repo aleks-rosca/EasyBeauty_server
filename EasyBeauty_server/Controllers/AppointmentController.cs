@@ -161,7 +161,11 @@ namespace EasyBeauty_server.Controllers
             {
                 using (DBConnection.GetConnection())
                 {
-                    if (!LoginRepo.CheckToken(user.Id, user.Token)) { return Ok(new { error = "Not logged in" }); }
+                    if (!LoginRepo.CheckToken(user.Id, user.Token))
+                    {
+                        LoginRepo.RemoveToken(user.Token);
+                        return Ok(new { error = "Not logged in" });
+                    }
                     AppointmentRepo.EditAppointment(id, appointment);
                     //Notify.SendSMS(appointment.CustomerName+","+"Appointment has been approved on " + appointment.StartTime.ToString("dddd, dd MMMM", CultureInfo.InvariantCulture) + " at "+ appointment.StartTime.ToString("HH:mm"), appointment.PhoneNr);
                     return Ok(new {success = "Appointment saved" });
@@ -183,7 +187,11 @@ namespace EasyBeauty_server.Controllers
             {
                 using (DBConnection.GetConnection())
                 {
-                    if (!LoginRepo.CheckToken(user.Id, user.Token)) { return Ok(new { error = "Not logged in" }); }
+                    if (!LoginRepo.CheckToken(user.Id, user.Token))
+                    {
+                        LoginRepo.RemoveToken(user.Token);
+                        return Ok(new { error = "Not logged in" });
+                    }
                     AppointmentRepo.DeleteAppointment(id);
                     return Ok(new { success = "Appointment deleted" });
                 }

@@ -38,7 +38,11 @@ namespace EasyBeauty_server.Controllers
             {
                 using (DBConnection.GetConnection())
                 {
-                    if (!LoginRepo.CheckToken(user.Id, user.Token)) { return Ok(new { error = "Not logged in" }); }
+                    if (!LoginRepo.CheckToken(user.Id, user.Token))
+                    {
+                        LoginRepo.RemoveToken(user.Token);
+                        return Ok(new { error = "Not logged in" });
+                    }
                     if (!EmployeeRepo.GetRole(user.Id).Equals("manager")) return StatusCode(402,new {error = "Wrong Privileges"});
                     if (EmployeeRepo.CheckEmployeeEmail(employee.Email)) return Ok(new {error = "Email already Exists!"});
                     EmployeeRepo.CreateEmployee(employee);
@@ -61,7 +65,11 @@ namespace EasyBeauty_server.Controllers
             {
                 using (DBConnection.GetConnection())
                 {
-                    if (!LoginRepo.CheckToken(user.Id, user.Token)) { return Ok(new { error = "Not logged in" }); }
+                    if (!LoginRepo.CheckToken(user.Id, user.Token))
+                    {
+                        LoginRepo.RemoveToken(user.Token);
+                        return Ok(new { error = "Not logged in" });
+                    }
                     if (!EmployeeRepo.GetRole(user.Id).Equals("manager")) return StatusCode(402,new {error = "Wrong Privileges"});
                     EmployeeRepo.EditEmployee(id, employee);
                     return Ok(new { success = "Employee saved" });
@@ -83,7 +91,11 @@ namespace EasyBeauty_server.Controllers
             {
                 using (DBConnection.GetConnection())
                 {
-                    if (!LoginRepo.CheckToken(user.Id, user.Token)) { return Ok(new { error = "Not logged in" }); }
+                    if (!LoginRepo.CheckToken(user.Id, user.Token))
+                    {
+                        LoginRepo.RemoveToken(user.Token);
+                        return Ok(new { error = "Not logged in" });
+                    }
                     if (!EmployeeRepo.GetRole(user.Id).Equals("manager")) return StatusCode(402,new {error = "Wrong Privileges"});
                     EmployeeRepo.DeleteEmployee(id);
                     return Ok(new { success = "Employee deleted" });

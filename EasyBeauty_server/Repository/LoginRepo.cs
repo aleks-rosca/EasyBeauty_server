@@ -38,21 +38,16 @@
 
         public static bool CheckToken(int id, string token)
         {
+            return DBConnection.DatabaseConnection.ExecuteScalar<bool>(@"SELECT 1 FROM Token WHERE employeeId = @id AND token = @token AND expiresOn > GetDate()", new { id, token });
+        }
+
+        /*public static bool CheckLogin(int id)
+        {
             return DBConnection.DatabaseConnection.ExecuteScalar<bool>(@"DECLARE @exists BIT
             SET @exists = (SELECT 1 FROM Token WHERE employeeid = @id AND token = @token AND expiresOn > GETDATE())
             SELECT @exists
             IF (@exists IS NULL )
             DELETE FROM Token WHERE employeeId = @id and token = @token", new { id, token });
-        }
-
-        public static bool CheckLogin(int id)
-        {
-            return DBConnection.DatabaseConnection.ExecuteScalar<bool>(@"
-            DECLARE @exists BIT
-            SET @exists = (SELECT 1 FROM Token WHERE employeeid = @id AND expiresOn > GETDATE())
-            SELECT @exists
-            IF (@exists IS NULL )
-            DELETE FROM Token WHERE employeeId = @id", new { id });
-        }
+        }*/
     }
 }

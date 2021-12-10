@@ -38,7 +38,11 @@ namespace EasyBeauty_server.Controllers
             {
                 using (DBConnection.GetConnection())
                 {
-                    if (!LoginRepo.CheckToken(user.Id, user.Token)) { return Ok(new { error = "Not logged in" }); }
+                    if (!LoginRepo.CheckToken(user.Id, user.Token))
+                    {
+                        LoginRepo.RemoveToken(user.Token);
+                        return Ok(new { error = "Not logged in" });
+                    }
                     if (!EmployeeRepo.GetRole(user.Id).Equals("manager")) return StatusCode(402,new {error = "Wrong Privileges"});
                     if (ServiceRepo.CheckServiceName(service.Name))
                     {
@@ -66,7 +70,11 @@ namespace EasyBeauty_server.Controllers
             {
                 using (DBConnection.GetConnection())
                 {
-                    if (!LoginRepo.CheckToken(user.Id, user.Token)) { return Ok(new { error = "Not logged in" }); }
+                    if (!LoginRepo.CheckToken(user.Id, user.Token))
+                    {
+                        LoginRepo.RemoveToken(user.Token);
+                        return Ok(new { error = "Not logged in" });
+                    }
                     if (!EmployeeRepo.GetRole(user.Id).Equals("manager")) return StatusCode(402,new {error = "Wrong Privileges"});
                     ServiceRepo.EditService(id, service);
                     return Ok(ServiceRepo.GetServices());
@@ -88,7 +96,11 @@ namespace EasyBeauty_server.Controllers
             {
                 using (DBConnection.GetConnection())
                 {
-                    if (!LoginRepo.CheckToken(user.Id, user.Token)) { return Ok(new { error = "Not logged in" }); }
+                    if (!LoginRepo.CheckToken(user.Id, user.Token))
+                    {
+                        LoginRepo.RemoveToken(user.Token);
+                        return Ok(new { error = "Not logged in" });
+                    }
                     if (!EmployeeRepo.GetRole(user.Id).Equals("manager")) return StatusCode(402,new {error = "Wrong Privileges"});
                     ServiceRepo.DeleteService(id);
                     return Ok(ServiceRepo.GetServices());
