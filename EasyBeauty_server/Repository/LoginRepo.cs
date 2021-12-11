@@ -23,22 +23,32 @@
 
         public static UserInfo GetUserInfo(string email)
         {
-            return DBConnection.DatabaseConnection.QuerySingle<UserInfo>(@"SELECT fullName, id, role FROM Employee WHERE email = @email", new { email });
+            return DBConnection.DatabaseConnection.QuerySingle<UserInfo>(@"SELECT name, id, role FROM Employee WHERE email = @email", new { email });
         }
         
         public static void SetToken(int id, string token)
         {
-            DBConnection.DatabaseConnection.Execute(@"INSERT INTO Token(token, employeeid, expiresOn) VALUES (@token, @id, DATEADD(MINUTE, +30, GETDATE()))", new { token,  id });
+            DBConnection.DatabaseConnection.Execute(@"INSERT INTO Token(token, employeeId, expiresOn) VALUES (@token, @id, DATEADD(MINUTE, +30, GETDATE()))", new { token,  id });
         }
 
-        public static void RemoveToken(string token)
+        public static void RemoveToken(int id)
         {
-            DBConnection.DatabaseConnection.Execute(@"DELETE FROM Token WHERE token = @token", new { token });
+            DBConnection.DatabaseConnection.Execute(@"DELETE FROM Token WHERE employeeId = @id", new { id });
         }
 
         public static bool CheckToken(int id, string token)
         {
             return DBConnection.DatabaseConnection.ExecuteScalar<bool>(@"SELECT 1 FROM Token WHERE employeeId = @id AND token = @token AND expiresOn > GetDate()", new { id, token });
+        }
+        public static bool CheckLogin(int id)
+        {
+            return DBConnection.DatabaseConnection.ExecuteScalar<bool>(@"SELECT 1 FROM Token WHERE employeeId = @id", new { id});
+        }
+
+        public static int GetIdByEmail(string email)
+        {
+            return DBConnection.DatabaseConnection.QuerySingleOrDefault<int>(
+                "SELECT id FROM Employee WHERE email = @email", new {email});
         }
         
     }

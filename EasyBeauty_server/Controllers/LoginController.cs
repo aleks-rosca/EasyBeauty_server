@@ -56,6 +56,11 @@ namespace EasyBeauty_server.Controllers
             {
                 using (DBConnection.GetConnection())
                 {
+                    var id = LoginRepo.GetIdByEmail(email);
+                    if (LoginRepo.CheckLogin(id))
+                    {
+                        LoginRepo.RemoveToken(id);
+                    }
                     var validateLogin = LoginRepo.CheckPassword(email, Hashing.HashString(password));
                     if (!validateLogin) { return Ok(new { error = "Password incorrect" }); }
                     var userInfo = LoginRepo.GetUserInfo(email);
@@ -82,7 +87,7 @@ namespace EasyBeauty_server.Controllers
                 using (DBConnection.GetConnection())
                 {
                     if (!LoginRepo.CheckToken(user.Id, user.Token)) { return Ok(new { error = "Not logged in" }); }
-                    LoginRepo.RemoveToken(user.Token);
+                    LoginRepo.RemoveToken(user.Id);
                     return Ok(new { success = "Logged out" });
                 }
             }

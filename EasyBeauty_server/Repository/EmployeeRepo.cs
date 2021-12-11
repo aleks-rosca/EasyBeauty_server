@@ -11,8 +11,8 @@ namespace EasyBeauty_server.Repository
     {
         public static void CreateEmployee(Employee employee)
         {
-            DBConnection.DatabaseConnection.Execute(@"INSERT INTO Employee (fullName, phoneNr, email, role) Values (@fullName, @phoneNr, @email, @role)",
-            new { fullName = employee.FullName, phoneNr = employee.PhoneNr, email = employee.Email, role = employee.Role });
+            DBConnection.DatabaseConnection.Execute(@"INSERT INTO Employee (name, phoneNr, email, role) Values (@name, @phoneNr, @email, @role)",
+            new { name = employee.Name, phoneNr = employee.PhoneNr, email = employee.Email, role = employee.Role });
         }
 
         public static bool CheckEmployeeEmail(string email)
@@ -27,13 +27,13 @@ namespace EasyBeauty_server.Repository
 
         public static void EditEmployee(int id, Employee employee)
         {
-            DBConnection.DatabaseConnection.Execute(@"UPDATE Employee SET fullName = @fullName, phoneNr = @phoneNr, email = @email, role = @role WHERE ID = @id",
-                new { id, fullName = employee.FullName, phoneNr = employee.PhoneNr, email = employee.Email, role = employee.Role });
+            DBConnection.DatabaseConnection.Execute(@"UPDATE Employee SET name = @name, phoneNr = @phoneNr, email = @email, role = @role WHERE ID = @id",
+                new { id, name = employee.Name, phoneNr = employee.PhoneNr, email = employee.Email, role = employee.Role });
         }
 
         public static List<Employee> GetEmployees()
         {
-            return DBConnection.DatabaseConnection.Query<Employee>("Select id, fullName, phoneNr, email, role from Employee").ToList();
+            return DBConnection.DatabaseConnection.Query<Employee>("Select id, name, phoneNr, email, role from Employee").ToList();
         }
         
         public static string GetRole(int id)

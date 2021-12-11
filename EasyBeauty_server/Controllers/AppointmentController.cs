@@ -3,10 +3,10 @@ using System.Globalization;
 
 namespace EasyBeauty_server.Controllers
 {
-    using EasyBeauty_server.DataAccess;
-    using EasyBeauty_server.Models;
-    using EasyBeauty_server.Repository;
-    using EasyBeauty_server.Helpers;
+    using DataAccess;
+    using Models;
+    using Repository;
+    using Helpers;
     using Microsoft.AspNetCore.Mvc;
     using System;
 
@@ -127,7 +127,7 @@ namespace EasyBeauty_server.Controllers
                 {
                     if (!LoginRepo.CheckToken(user.Id, user.Token))
                     {
-                        LoginRepo.RemoveToken(user.Token);
+                        LoginRepo.RemoveToken(user.Id);
                         return Ok(new { error = "Not logged in" });
                     }
                     AppointmentRepo.EditAppointment(id, appointment);
@@ -153,7 +153,7 @@ namespace EasyBeauty_server.Controllers
                 {
                     if (!LoginRepo.CheckToken(user.Id, user.Token))
                     {
-                        LoginRepo.RemoveToken(user.Token);
+                        LoginRepo.RemoveToken(user.Id);
                         return Ok(new { error = "Not logged in" });
                     }
                     AppointmentRepo.DeleteAppointment(id);

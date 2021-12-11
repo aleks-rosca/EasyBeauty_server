@@ -22,7 +22,7 @@
                 {
                     if (!LoginRepo.CheckToken(user.Id, user.Token))
                     {
-                        LoginRepo.RemoveToken(user.Token);
+                        LoginRepo.RemoveToken(user.Id);
                         return Ok(new { error = "Not logged in" });
                     }
                     return Ok(ProductRepo.GetProducts());
@@ -47,7 +47,7 @@
                 {
                     if (!LoginRepo.CheckToken(user.Id, user.Token))
                     {
-                        LoginRepo.RemoveToken(user.Token);
+                        LoginRepo.RemoveToken(user.Id);
                         return Ok(new { error = "Not logged in" });
                     }
                     if (!EmployeeRepo.GetRole(user.Id).Equals("manager")) return StatusCode(402,new {error = "Wrong Privileges"});
@@ -76,7 +76,7 @@
                 {
                     if (!LoginRepo.CheckToken(user.Id, user.Token))
                     {
-                        LoginRepo.RemoveToken(user.Token);
+                        LoginRepo.RemoveToken(user.Id);
                         return Ok(new { error = "Not logged in" });
                     }
                     if (!EmployeeRepo.GetRole(user.Id).Equals("manager")) return StatusCode(402,new {error = "Wrong Privileges"});
@@ -102,7 +102,7 @@
                 {
                     if (!LoginRepo.CheckToken(user.Id, user.Token))
                     {
-                        LoginRepo.RemoveToken(user.Token);
+                        LoginRepo.RemoveToken(user.Id);
                         return Ok(new { error = "Not logged in" });
                     }
                     if (!EmployeeRepo.GetRole(user.Id).Equals("manager")) return StatusCode(402,new {error = "Wrong Privileges"});
