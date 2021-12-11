@@ -14,42 +14,6 @@ namespace EasyBeauty_server.Controllers
     [ApiController]
     public class AppointmentController : ControllerBase
     {
-        // [HttpGet]
-        // public IActionResult GetAppointments([FromQuery]string cookie)
-        // {
-        //     var user = CookieEncDec.DecryptCookie(cookie);
-        //     try
-        //     {
-        //         using (DBConnection.GetConnection())
-        //         {
-        //             if (!LoginRepo.CheckLogin(user.Id)) return StatusCode(401, "Not Logged in");
-        //             var result = AppointmentRepo.GetAppointments();
-        //
-        //             var list = (from a in result
-        //             let employee = new Employee {ID = a.EmployeeID, FullName = a.EmployeeName}
-        //             let service = new Service {ID = a.ServiceID, Name = a.ServiceName, Price = a.ServicePrice, Duration = a.ServiceDuration}
-        //             let customer = new Customer {FullName = a.CustomerName, PhoneNumber = a.PhoneNr, Email = a.CustomerEmail}
-        //             select new Appointment
-        //             {
-        //                 ID = a.ID,
-        //                 StartTime = a.StartTime,
-        //                 EndTime = a.EndTime,
-        //                 Notes = a.Notes,
-        //                 Employee = employee,
-        //                 Service = service,
-        //                 Customer = customer,
-        //                 IsAccepted = a.IsAccepted
-        //             }).ToList();
-        //
-        //             return Ok(list);
-        //         }
-        //     }
-        //     catch (Exception e)
-        //     {
-        //         return StatusCode(500, "Error: " + e);
-        //     }
-        // }
-
         [HttpGet]
         public IActionResult GetAppointmentsByEmployee([FromQuery]int employeeId)
         {
@@ -66,7 +30,7 @@ namespace EasyBeauty_server.Controllers
                 return StatusCode(500, new{error = e});
             }
         }
-        [HttpGet("/api/Schedule/")]
+        [HttpGet("GetEmployeeSchedule")]
         public IActionResult GetEmployeeTimeSchedule([FromQuery]int employeeId)
         {
             try
@@ -84,14 +48,14 @@ namespace EasyBeauty_server.Controllers
             }
         }
 
-        [HttpGet("/api/Customer/")]
+        [HttpGet("CheckCustomer")]
         public IActionResult CheckCustomer([FromQuery]int phoneNr)
         {
             try
             {
                 using (DBConnection.GetConnection())
                 {
-                    return CustomerRepo.CheckCustomer(phoneNr) ? Ok(CustomerRepo.GetCustomerByPhoneNumber(phoneNr)) : StatusCode(401, new {isCustomer = false, phoneNr});
+                    return CustomerRepo.CheckCustomer(phoneNr) ? Ok(CustomerRepo.GetCustomerByPhoneNumber(phoneNr)) : Ok(new {isCustomer = false, phoneNr});
                 }
             }
             catch (Exception e)

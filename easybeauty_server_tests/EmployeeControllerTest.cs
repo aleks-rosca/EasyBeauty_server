@@ -1,7 +1,4 @@
 ﻿using EasyBeauty_server.Controllers;
-using EasyBeauty_server.Models;
-using System;
-using System.Collections.Generic;
 using Microsoft.AspNetCore.Mvc;
 using Xunit;
 

@@ -31,7 +31,8 @@
 
         public static SqlConnection GetConnection(string conn = null)
         {
-            conn = "Server=db1.easyways.dk;user=easybeauty;password=EasyBeauty1337;Database=easybeauty;";
+            conn = "Server=easybeauty.mssql.somee.com;user=AleksMD_SQLLogin_1;password=m3x6lm4ode;Database=easybeauty";
+            //conn = "Server=db1.easyways.dk;user=easybeauty;password=EasyBeauty1337;Database=easybeauty;";
             var connection = new SqlConnection(conn);
             connection.Open();
             DatabaseConnection = connection;

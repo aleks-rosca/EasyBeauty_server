@@ -1,14 +1,13 @@
-﻿using System;
-
+﻿
 namespace EasyBeauty_server.Repository
 {
     using Dapper;
-    using EasyBeauty_server.DataAccess;
-    using EasyBeauty_server.Models;
+    using DataAccess;
+    using Models;
     using System.Collections.Generic;
     using System.Linq;
 
-    public class EmployeeRepo
+    public static class EmployeeRepo
     {
         public static void CreateEmployee(Employee employee)
         {
@@ -36,11 +35,7 @@ namespace EasyBeauty_server.Repository
         {
             return DBConnection.DatabaseConnection.Query<Employee>("Select id, fullName, phoneNr, email, role from Employee").ToList();
         }
-        public static Employee getEmployeeById(int id)
-        {
-            return DBConnection.DatabaseConnection.QuerySingle(@"Select id, fullName from Employee WHERE ID = @id", id);
-        }
-
+        
         public static string GetRole(int id)
         {
             return DBConnection.DatabaseConnection.QueryFirstOrDefault<string>("Select role FROM Employee WHERE ID = @id",new {id});

@@ -1,11 +1,4 @@
-﻿using Dapper;
-using EasyBeauty_server.Controllers;
-using EasyBeauty_server.DataAccess;
-using EasyBeauty_server.Models;
-using EasyBeauty_server.Repository;
-using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using EasyBeauty_server.Controllers;
 using Microsoft.AspNetCore.Mvc;
 using Xunit;
 

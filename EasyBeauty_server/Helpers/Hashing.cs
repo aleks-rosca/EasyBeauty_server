@@ -4,26 +4,24 @@
     using System.Security.Cryptography;
     using System.Text;
 
-    public class Hashing
+    public static class Hashing
     {
         public static string HashString(string text, string salt = "")
         {
-            if (String.IsNullOrEmpty(text))
+            if (string.IsNullOrEmpty(text))
             {
-                return String.Empty;
+                return string.Empty;
             }
 
-            using (var sha = new SHA256Managed())
-            {
-                byte[] textBytes = Encoding.UTF8.GetBytes(text + salt);
-                byte[] hashBytes = sha.ComputeHash(textBytes);
+            using var sha = new SHA256Managed();
+            var textBytes = Encoding.UTF8.GetBytes(text + salt);
+            var hashBytes = sha.ComputeHash(textBytes);
 
-                string hash = BitConverter
-                    .ToString(hashBytes)
-                    .Replace("-", String.Empty);
+            var hash = BitConverter
+                .ToString(hashBytes)
+                .Replace("-", string.Empty);
 
-                return hash;
-            }
+            return hash;
         }
     }
 }

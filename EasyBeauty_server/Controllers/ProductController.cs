@@ -5,7 +5,7 @@
     using Repository;
     using Microsoft.AspNetCore.Mvc;
     using System;
-    using EasyBeauty_server.Helpers;
+    using Helpers;
 
     [Route("api/[controller]")]
     [ApiController]

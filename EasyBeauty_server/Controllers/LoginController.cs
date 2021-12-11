@@ -2,11 +2,9 @@
 
 namespace EasyBeauty_server.Controllers
 {
-    using EasyBeauty_server.DataAccess;
-    using EasyBeauty_server.Helpers;
-    using EasyBeauty_server.Models;
-    using EasyBeauty_server.Repository;
-    using System.Text.Json;
+    using DataAccess;
+    using Helpers;
+    using Repository;
     using Microsoft.AspNetCore.Mvc;
     using System;
 

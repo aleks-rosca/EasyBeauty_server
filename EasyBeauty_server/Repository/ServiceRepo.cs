@@ -1,12 +1,12 @@
 ﻿namespace EasyBeauty_server.Repository
 {
     using Dapper;
-    using EasyBeauty_server.DataAccess;
-    using EasyBeauty_server.Models;
+    using DataAccess;
+    using Models;
     using System.Collections.Generic;
     using System.Linq;
 
-    public class ServiceRepo
+    public static class ServiceRepo
     {
         public static void CreateService(Service service)
         {
@@ -33,10 +33,6 @@
         public static List<Service> GetServices()
         {
             return DBConnection.DatabaseConnection.Query<Service>("Select * from Service").ToList();
-        }
-        public static Service GetServiceById(int id)
-        {
-            return DBConnection.DatabaseConnection.QuerySingle(@"Select id, name from Service WHERE ID = @id", id);
         }
     }
 }

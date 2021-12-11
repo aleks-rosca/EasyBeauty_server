@@ -1,8 +1,8 @@
 ﻿namespace EasyBeauty_server.Repository
 {
     using Dapper;
-    using EasyBeauty_server.DataAccess;
-    using EasyBeauty_server.Models;
+    using DataAccess;
+    using Models;
     using System.Collections.Generic;
     using System.Linq;
 

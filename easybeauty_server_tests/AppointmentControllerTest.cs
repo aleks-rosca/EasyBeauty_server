@@ -1,7 +1,5 @@
 using EasyBeauty_server.Controllers;
-using EasyBeauty_server.Models;
-using System;
-using System.Collections.Generic;
+
 using Microsoft.AspNetCore.Mvc;
 using Xunit;
 
@@ -26,9 +24,18 @@ namespace easybeauty_server_tests
             Assert.Equal(200, okResult?.StatusCode);
         }
         [Fact]
-        public void GetEMployeeTimeSchedule()
+        public void GetEmployeeTimeSchedule()
         {
             var result = controller.GetEmployeeTimeSchedule(1);
+            var okResult = result as OkObjectResult;
+            Assert.NotNull(result);
+            Assert.Equal(200, okResult?.StatusCode);
+        }
+
+        [Fact]
+        public void CheckCustomer()
+        {
+            var result = controller.CheckCustomer(12345678);
             var okResult = result as OkObjectResult;
             Assert.NotNull(result);
             Assert.Equal(200, okResult?.StatusCode);

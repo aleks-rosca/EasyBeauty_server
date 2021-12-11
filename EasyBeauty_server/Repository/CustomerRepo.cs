@@ -4,7 +4,7 @@ using EasyBeauty_server.Models;
 
 namespace EasyBeauty_server.Repository
 {
-    public class CustomerRepo
+    public static class CustomerRepo
     {
         public static void CreateCustomer(Customer customer)
         {
