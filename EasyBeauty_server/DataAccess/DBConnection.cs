@@ -23,10 +23,7 @@
                 }
                 return databaseConnection;
             }
-            set
-            {
-                databaseConnection = value;
-            }
+            private set => databaseConnection = value;
         }
 
         public static SqlConnection GetConnection(string conn = null)

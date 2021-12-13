@@ -1,24 +1,31 @@
+using System;
+using System.Collections.Generic;
 using EasyBeauty_server.Controllers;
-
+using EasyBeauty_server.Models;
+using EasyBeauty_server.Repository;
 using Microsoft.AspNetCore.Mvc;
 using Xunit;
+using Xunit.Abstractions;
 
 namespace easybeauty_server_tests
 {
     public class AppointmentControllerTest
     {
-        readonly AppointmentController controller;
+        readonly AppointmentController _controller;
+        private readonly ITestOutputHelper _output;
 
-        public AppointmentControllerTest()
+        public AppointmentControllerTest(ITestOutputHelper output)
         {
-            controller = new AppointmentController();
+            _controller = new AppointmentController();
+            this._output = output;
         }
+
         
         
         [Fact]
         public void GetAppointmentByEmployee()
         {
-            var result = controller.GetAppointmentsByEmployee(1);
+            var result = _controller.GetAppointmentsByEmployee(1);
             var okResult = result as OkObjectResult;
             Assert.NotNull(result);
             Assert.Equal(200, okResult?.StatusCode);
@@ -26,7 +33,7 @@ namespace easybeauty_server_tests
         [Fact]
         public void GetEmployeeTimeSchedule()
         {
-            var result = controller.GetEmployeeTimeSchedule(1);
+            var result = _controller.GetEmployeeTimeSchedule(1);
             var okResult = result as OkObjectResult;
             Assert.NotNull(result);
             Assert.Equal(200, okResult?.StatusCode);
@@ -35,10 +42,35 @@ namespace easybeauty_server_tests
         [Fact]
         public void CheckCustomer()
         {
-            var result = controller.CheckCustomer(12345678);
+            var result = _controller.CheckCustomer(12345678);
             var okResult = result as OkObjectResult;
             Assert.NotNull(result);
             Assert.Equal(200, okResult?.StatusCode);
         }
+        [Fact]
+        public void CreateAppointment()
+        {
+            var appointment = new Appointment
+            {
+                StartTime = DateTime.Now,
+                EndTime = DateTime.Now + TimeSpan.FromHours(1),
+                EmployeeId = 1,
+                ServiceId = 20,
+                CustomerName = "xUnit Test",
+                PhoneNr = 12345678,
+                CustomerEmail = "xUnit@test.com",
+                Notes = "test"
+            };
+            
+            var actionResult = _controller.CreateAppointment(appointment);
+            var okObjectResult = actionResult as OkObjectResult;
+            Assert.NotNull(okObjectResult);
+            var actual = _controller.CheckCustomer(12345678);
+            var res = actual as OkObjectResult;
+            Assert.NotNull(actual);
+            Assert.IsType<Customer>(res.Value);
+            
+        }
     }
+    
 }

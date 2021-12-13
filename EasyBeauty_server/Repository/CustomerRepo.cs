@@ -22,7 +22,7 @@ namespace EasyBeauty_server.Repository
         }
         public static bool CheckCustomer(int phoneNr)
         {
-            return DBConnection.DatabaseConnection.ExecuteScalar<bool>(@"SELECT 1 FROM Customer WHERE phonenr = @phoneNr", new { phoneNr });
+            return DBConnection.DatabaseConnection.ExecuteScalar<bool>(@"SELECT 1 FROM Customer WHERE phoneNr = @phoneNr", new { phoneNr });
         }
     }
 }
