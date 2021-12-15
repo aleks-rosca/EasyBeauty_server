@@ -1,6 +1,4 @@
 ﻿
-using System.Globalization;
-
 namespace EasyBeauty_server.Controllers
 {
     using DataAccess;

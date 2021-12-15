@@ -17,7 +17,6 @@ namespace EasyBeauty_server.Repository
             return DBConnection.DatabaseConnection.QuerySingle<Customer>
                 ("SELECT * FROM Customer WHERE phoneNr = @phoneNr", new { phoneNr });
         }
-
         public static void EditCustomer(int phoneNr, Customer customer)
         {
             DBConnection.DatabaseConnection.Execute
