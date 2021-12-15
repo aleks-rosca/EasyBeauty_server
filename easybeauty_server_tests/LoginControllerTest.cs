@@ -26,14 +26,14 @@ namespace easybeauty_server_tests
             Assert.Equal(200, okResult?.StatusCode);
             Assert.Contains("hasLogin",okResult.Value.ToString() ?? string.Empty);
         }
-        [Fact]
-        public void Login()
-        {
-            var login = controller.Login("us.account.blizzard@gmail.com", "aleks4444");
-            var okResult = login as OkObjectResult;
-            Assert.Equal(200, okResult?.StatusCode);
-            Assert.NotNull(okResult);
-            Assert.Contains("cookie",okResult.Value.ToString() ?? string.Empty);
-        }
+        // [Fact]
+        // public void Login()
+        // {
+        //     var login = controller.Login("us.account.blizzard@gmail.com", "aleks4444");
+        //     var okResult = login as OkObjectResult;
+        //     Assert.Equal(200, okResult?.StatusCode);
+        //     Assert.NotNull(okResult);
+        //     Assert.Contains("cookie",okResult.Value.ToString() ?? string.Empty);
+        // }
     }
 }
