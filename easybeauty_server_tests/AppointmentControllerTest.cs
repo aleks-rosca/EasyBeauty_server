@@ -39,14 +39,14 @@ namespace easybeauty_server_tests
             Assert.Equal(200, okResult?.StatusCode);
         }
 
-        // [Fact]
-        // public void CheckCustomer()
-        // {
-        //     var result = _controller.CheckCustomer(12345678);
-        //     var okResult = result as OkObjectResult;
-        //     Assert.NotNull(result);
-        //     Assert.Equal(200, okResult?.StatusCode);
-        // }
+        [Fact]
+        public void CheckCustomer()
+        {
+            var result = _controller.CheckCustomer(12345678);
+            var okResult = result as OkObjectResult;
+            Assert.NotNull(result);
+            Assert.Equal(200, okResult?.StatusCode);
+        }
         [Fact]
         public void CreateAppointment()
         {
