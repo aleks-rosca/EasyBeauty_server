@@ -1,4 +1,6 @@
 ﻿
+using System.Globalization;
+
 namespace EasyBeauty_server.Controllers
 {
     using DataAccess;
@@ -62,9 +64,7 @@ namespace EasyBeauty_server.Controllers
             {
                 return StatusCode(500, new {error = e});
             }
-            
         }
-        
         [HttpPost]
         public IActionResult CreateAppointment([FromBody] Appointment appointment)
         {
@@ -114,7 +114,6 @@ namespace EasyBeauty_server.Controllers
                 return StatusCode(500, new{error = e});
             }
         }
-
         [HttpPut]
         public IActionResult EditAppointment([FromQuery]int id, [FromBody] Appointment appointment, [FromQuery]string cookie)
         {
@@ -131,17 +130,15 @@ namespace EasyBeauty_server.Controllers
                         return Ok(new { error = "Not logged in" });
                     }
                     AppointmentRepo.EditAppointment(id, appointment);
-                    //Notify.SendSMS(appointment.CustomerName+","+"Appointment has been approved on " + appointment.StartTime.ToString("dddd, dd MMMM", CultureInfo.InvariantCulture) + " at "+ appointment.StartTime.ToString("HH:mm"), appointment.PhoneNr);
+                    Notify.SendSms(appointment.CustomerName+","+"Appointment has been approved on " + appointment.StartTime.ToString("dddd, dd MMMM", CultureInfo.InvariantCulture) + " at "+ appointment.StartTime.ToString("HH:mm"), appointment.PhoneNr);
                     return Ok(new {success = "Appointment saved" });
                 }
-
             }
             catch (Exception e)
             {
                 return StatusCode(500, new{error = e});
             }
         }
-
         [HttpDelete]
         public IActionResult Delete([FromQuery]int id, [FromQuery]string cookie)
         {
