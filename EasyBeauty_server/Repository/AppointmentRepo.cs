@@ -10,13 +10,19 @@ namespace EasyBeauty_server.Repository
     {
         public static void CreateAppointment(Appointment appointment)
         {
-            DBConnection.DatabaseConnection.Execute(@"INSERT INTO Appointment (employeeid, phonenr, serviceid, starttime, endtime, notes, isAccepted) VALUES (@employeeID, @phonenr, @serviceid, @starttime, @endtime, @notes, 0)",
-            new { employeeid = appointment.EmployeeId, phonenr = appointment.PhoneNr, serviceid = appointment.ServiceId, starttime = appointment.StartTime, endtime = appointment.EndTime, notes = appointment.Notes });
+            DBConnection.DatabaseConnection.Execute(@"INSERT INTO Appointment 
+            (employeeId, phoneNr, serviceId, startTime, endTime, notes, isAccepted)
+             VALUES (@employeeID, @phoneNr, @serviceId, @startTime, @endTime, @notes, 0)",
+            new { employeeid = appointment.EmployeeId, phonenr = appointment.PhoneNr,
+                serviceid = appointment.ServiceId, starttime = appointment.StartTime,
+                endtime = appointment.EndTime, notes = appointment.Notes });
         }
 
         public static bool CheckAppointment(int phoneNr)
         {
-            return DBConnection.DatabaseConnection.ExecuteScalar<bool>(@"SELECT 1 FROM Appointment WHERE phonenr = @phoneNr AND starttime > GETDATE()", new { phoneNr });
+            return DBConnection.DatabaseConnection.ExecuteScalar<bool>
+                (@"SELECT 1 FROM Appointment WHERE phoneNr = @phoneNr AND startTime > GetDate()",
+                    new { phoneNr });
         }
         public static void DeleteAppointment(int id)
         {

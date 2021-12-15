@@ -55,7 +55,9 @@ namespace EasyBeauty_server.Controllers
             {
                 using (DBConnection.GetConnection())
                 {
-                    return CustomerRepo.CheckCustomer(phoneNr) ? Ok(CustomerRepo.GetCustomerByPhoneNumber(phoneNr)) : Ok(new {isCustomer = false, phoneNr});
+                    return CustomerRepo.CheckCustomer(phoneNr) ? 
+                        Ok(CustomerRepo.GetCustomerByPhoneNumber(phoneNr)) : 
+                        Ok(new {isCustomer = false, phoneNr});
                 }
             }
             catch (Exception e)
@@ -102,11 +104,11 @@ namespace EasyBeauty_server.Controllers
                     {
                         return Ok(new { error = "Customer has an existing appointment" });
                     }
-                    else
-                    {
-                        AppointmentRepo.CreateAppointment(appointment);
-                        return Ok(new { success = "Appointment has been requested on " + appointment.StartTime.ToString("dddd, dd MMMM", CultureInfo.InvariantCulture) + " at "+ appointment.StartTime.ToString("HH:mm")});
-                    }
+                    AppointmentRepo.CreateAppointment(appointment);
+                    return Ok(new { success = "Appointment has been requested on " 
+                                              + appointment.StartTime.ToString(
+                                                  "dddd, dd MMMM")
+                                              + " at "+ appointment.StartTime.ToString("HH:mm")});
                 }
             }
             catch (Exception e)

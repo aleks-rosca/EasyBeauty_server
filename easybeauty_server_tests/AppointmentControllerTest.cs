@@ -68,8 +68,7 @@ namespace easybeauty_server_tests
             var actual = _controller.CheckCustomer(12345678);
             var res = actual as OkObjectResult;
             Assert.NotNull(actual);
-            Assert.IsType<Customer>(res.Value);
-            
+            if (res != null) Assert.IsType<Customer>(res.Value);
         }
     }
     
